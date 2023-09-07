@@ -1,5 +1,7 @@
 # BugsChannel
 
+![workflow](https://github.com/williampsena/bugs-channel/actions/workflows/main.yml/badge.svg)
+
 This repository contains information about handling issues with proxy. 
 I decided to begin this project with the goal of making error handling as simple as possible.
 I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io), and both tools are fantastic for quickly tracking down issues. However, the purpose of this project is not to replace them, but rather to provide a simple solution for you to run on premise that is easy and has significant features.

@@ -7,7 +7,7 @@ defmodule BugsChannel do
 
   def start(_type, _args) do
     children = [
-      {Bandit, plug: BugsChannel.Plugs.HealthCheck}
+      {Bandit, plug: BugsChannel.Router}
     ]
 
     opts = [strategy: :one_for_one, name: BugsChannel.Supervisor]

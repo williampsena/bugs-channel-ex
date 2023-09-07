@@ -4,7 +4,7 @@ defmodule BugsChannel.Plugs.HealthCheckTest do
 
   alias BugsChannel.Plugs.HealthCheck
 
-  test "returns welcome" do
+  test "returns health message" do
     conn =
       :get
       |> conn("/", "")

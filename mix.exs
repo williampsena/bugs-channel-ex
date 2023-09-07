@@ -36,7 +36,6 @@ defmodule BugsChannel.MixProject do
   defp deps do
     [
       {:plug, "~> 1.14"},
-      {:plug_cowboy, "~> 2.0"},
       {:bandit, "~> 0.6"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]

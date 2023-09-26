@@ -1,4 +1,8 @@
 defmodule BugsChannel.Mocks.ChannelMocks do
+  @moduledoc """
+  This is the module in charge of mocks using mox.
+  """
+
   import Mox
   import ExUnit.Assertions
 

@@ -30,7 +30,6 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.Event do
   end
 
   defp action(conn, "POST") do
-    IO.inspect(conn.params)
     send_unprocessable_entity_resp(conn)
   end
 

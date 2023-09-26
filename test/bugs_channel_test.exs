@@ -76,7 +76,7 @@ defmodule BugsChannelTest do
                    [
                      %{
                        module: BugsChannel.Channels.Gnat.RawEventConsumer,
-                       shutdown: 30000,
+                       shutdown: 30_000,
                        connection_name: :gnat,
                        subscription_topics: [%{queue_group: "RawEvents", topic: "raw-event.*"}]
                      }
@@ -89,7 +89,7 @@ defmodule BugsChannelTest do
                    [
                      %{
                        module: BugsChannel.Channels.Gnat.EventConsumer,
-                       shutdown: 30000,
+                       shutdown: 30_000,
                        connection_name: :gnat,
                        subscription_topics: [%{queue_group: "Events", topic: "event.*"}]
                      }

@@ -8,9 +8,7 @@ defmodule BugsChannel.Channels.Gnat.Channel do
 
   def publish(topic, message) when is_binary(topic) and is_binary(message) do
     try do
-      with :ok <- Gnat.pub(:gnat, topic, message) do
-        :ok
-      end
+      Gnat.pub(:gnat, topic, message)
     rescue
       e ->
         Logger.error("An error occurred while attempting to publish a message. #{inspect(e)}")

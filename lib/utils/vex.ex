@@ -21,7 +21,7 @@ defmodule BugsChannel.Utils.Vex do
     Enum.map(errors, fn error ->
       case error do
         {:error, field, _validator, result} ->
-          message = if is_binary(result), do: result, else: result[:message]
+          message = fetch_message(result)
           "#{field}: #{message}"
 
         error ->
@@ -31,6 +31,10 @@ defmodule BugsChannel.Utils.Vex do
   end
 
   def translate_errors(_ok), do: []
+
+  defp fetch_message(result) do
+    if is_binary(result), do: result, else: result[:message]
+  end
 
   @doc ~S"""
   Validate data and convert any errors to a plain list.

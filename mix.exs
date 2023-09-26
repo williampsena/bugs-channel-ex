@@ -7,7 +7,17 @@ defmodule BugsChannel.MixProject do
       version: "0.1.0",
       elixir: "~> 1.15-rc",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env()),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        test: :test,
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
       releases: [
         bugs_channel: [
           include_executables_for: [:unix],
@@ -37,7 +47,20 @@ defmodule BugsChannel.MixProject do
     [
       {:plug, "~> 1.14"},
       {:bandit, "~> 0.6"},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.17.1", only: :test},
+      {:mock, "~> 0.3.0", only: :test},
+      {:hammox, "~> 0.7", only: :test},
+      {:gen_stage, "~> 1.2"},
+      {:gnat, "~> 1.6"},
+      {:vex, "~> 0.9.1"}
     ]
+  end
+
+  defp elixirc_paths(:test), do: ["lib", "test", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
+  defp aliases do
+    [api: ["run --no-halt "]]
   end
 end

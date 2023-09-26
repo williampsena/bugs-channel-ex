@@ -1,0 +1,64 @@
+{
+    "id": "ccbf33b5bfd446368efe7ef2113ec78c",
+    "project_id": 1,
+    "title": "ValueError",
+    "body": "Error SDK",
+    "kind": "error",
+    "origin": "home",
+    "environment": "production",
+    "platform": "python",
+    "release": null,
+    "server_name": "foo",
+    "tags": [
+        "foo:bar"
+    ],
+    "extra_args": {
+        "sys.argv": [
+            "main.py"
+        ]
+    },
+    "timestamp": "2023-09-10T10:42:52.743172Z",
+    "message": null,
+    "exception": {
+        "mechanism": {
+            "handled": false,
+            "type": "excepthook"
+        },
+        "module": null,
+        "stacktrace": {
+            "frames": [
+                {
+                    "abs_path": "/home/foo/main.py",
+                    "context_line": "raise ValueError(\"Error SDK\")",
+                    "filename": "main.py",
+                    "function": "<module>",
+                    "in_app": true,
+                    "lineno": 8,
+                    "module": "__main__",
+                    "post_context": [],
+                    "pre_context": [
+                        "sentry_sdk.init(",
+                        "    \"http://key@localhost:4001/1\",",
+                        "    traces_sample_rate=1.0,",
+                        ")",
+                        ""
+                    ],
+                    "vars": {
+                        "__annotations__": {},
+                        "__builtins__": "<module 'builtins' (built-in)>",
+                        "__cached__": "None",
+                        "__doc__": "None",
+                        "__file__": "'/home/foo/main.py'",
+                        "__loader__": "<_frozen_importlib_external.SourceFileLoader object at 0x7fafa5015e70>",
+                        "__name__": "'__main__'",
+                        "__package__": "None",
+                        "__spec__": "None",
+                        "sentry_sdk": "<module 'sentry_sdk' from '/home/foo/.local/lib/python3.10/site-packages/sentry_sdk/__init__.py'>"
+                    }
+                }
+            ]
+        },
+        "type": "ValueError",
+        "value": "Error SDK"
+    }
+}

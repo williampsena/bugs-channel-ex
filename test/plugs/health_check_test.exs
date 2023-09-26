@@ -2,7 +2,13 @@ defmodule BugsChannel.Plugs.HealthCheckTest do
   use ExUnit.Case
   use Plug.Test
 
+  import BugsChannel.Test.Support.ApiHelper
+
   alias BugsChannel.Plugs.HealthCheck
+
+  test "initialize plug" do
+    assert HealthCheck.init(foo: "bar") == [foo: "bar"]
+  end
 
   test "returns health message" do
     conn =
@@ -10,8 +16,6 @@ defmodule BugsChannel.Plugs.HealthCheckTest do
       |> conn("/", "")
       |> HealthCheck.call([])
 
-    assert conn.state == :sent
-    assert conn.status == 200
-    assert conn.resp_body == "Keep calm I'm absolutely alive 🐛"
+    assert_conn(conn, 200, "Keep calm I'm absolutely alive 🐛")
   end
 end

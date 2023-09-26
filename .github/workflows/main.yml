@@ -40,7 +40,7 @@ jobs:
       run: mix credo -a
 
     - name: Run tests
-      run: mix test
+      run: mix coveralls
 
     - name: Run Trivy vulnerability scanner in fs mode
       uses: aquasecurity/trivy-action@master

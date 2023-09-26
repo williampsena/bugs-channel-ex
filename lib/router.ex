@@ -2,22 +2,27 @@ defmodule BugsChannel.Router do
   use Plug.Router
   use Plug.ErrorHandler
 
+  import BugsChannel.Utils.Config
+  import BugsChannel.Plugs.Api
+
   require Logger
 
-  plug(Plug.Parsers, parsers: [:urlencoded, :multipart])
+  if development?(), do: use(Plug.Debugger)
+
   plug(:match)
+
+  plug(Plug.Parsers, parsers: [:urlencoded, :multipart])
+
+  if development?(), do: plug(Plug.Logger, log: :debug)
+
   plug(:dispatch)
 
   forward("/health_check", to: BugsChannel.Plugs.HealthCheck)
 
-  match _ do
-    conn
-    |> put_resp_content_type("text/plain")
-    |> send_resp(404, "Oops! 👀")
-  end
+  match(_, do: send_not_found_resp(conn))
 
-  defp handle_errors(conn, %{kind: kind, reason: reason, stack: stack}) do
-    Logger.error("UnknownPlugRouteError #{kind}, #{reason} #{inspect(stack)}")
-    send_resp(conn, conn.status, "Something went wrong")
+  defp handle_errors(conn, error) do
+    Logger.error("UnknownPlugRouteError #{inspect(error)}")
+    send_unknown_error_resp(conn)
   end
 end

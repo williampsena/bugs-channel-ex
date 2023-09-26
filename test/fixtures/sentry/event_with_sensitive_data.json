@@ -1,0 +1,88 @@
+{
+    "items": [
+        {
+            "extra": {
+                "passwd": ["bar"],
+                "sys.argv": [
+                    "main.py"
+                ]
+            },
+            "message": null,
+            "timestamp": "2023-09-10T10:42:52.743172Z",
+            "request": null,
+            "user": null,
+            "level": "error",
+            "modules": {
+                "pip": "22.0.2"
+            },
+            "exception": {
+                "values": [
+                    {
+                        "mechanism": {
+                            "handled": false,
+                            "type": "excepthook"
+                        },
+                        "module": null,
+                        "stacktrace": {
+                            "frames": [
+                                {
+                                    "secret": 123,
+                                    "abs_path": "/home/foo/main.py",
+                                    "context_line": "raise ValueError(\"Error SDK\")",
+                                    "filename": "main.py",
+                                    "function": "<module>",
+                                    "in_app": true,
+                                    "lineno": 8,
+                                    "module": "__main__",
+                                    "post_context": [],
+                                    "pre_context": [
+                                        "sentry_sdk.init(",
+                                        "    \"http://key@localhost:4001/1\",",
+                                        "    traces_sample_rate=1.0,",
+                                        ")",
+                                        ""
+                                    ],
+                                    "vars": {
+                                        "secret": "foo",
+                                        "__annotations__": {},
+                                        "__builtins__": "<module 'builtins' (built-in)>",
+                                        "__cached__": "None",
+                                        "__doc__": "None",
+                                        "__file__": "'/home/foo/main.py'",
+                                        "__loader__": "<_frozen_importlib_external.SourceFileLoader object at 0x7fafa5015e70>",
+                                        "__name__": "'__main__'",
+                                        "__package__": "None",
+                                        "__spec__": "None",
+                                        "sentry_sdk": "<module 'sentry_sdk' from '/home/foo/.local/lib/python3.10/site-packages/sentry_sdk/__init__.py'>"
+                                    }
+                                }
+                            ]
+                        },
+                        "type": "ValueError",
+                        "value": "Error SDK"
+                    }
+                ]
+            },
+            "__original_exception__": null,
+            "__source__": null,
+            "breadcrumbs": {
+                "values": []
+            },
+            "culprit": null,
+            "environment": "production",
+            "event_id": "ccbf33b5bfd446368efe7ef2113ec78c",
+            "fingerprint": null,
+            "platform": "python",
+            "release": null,
+            "server_name": "foo",
+            "tags": null,
+            "password": "bar"
+        }
+    ],
+    "event_id": "ccbf33b5bfd446368efe7ef2113ec78c",
+    "glob": [
+        "1",
+        "envelope"
+    ],
+    "project": "api"
+}

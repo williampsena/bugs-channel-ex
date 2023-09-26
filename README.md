@@ -8,6 +8,36 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 
 > I believe the project will be ready for production within the next three months. 🙏🏾
 
+# Challenges
+## Done 👌
+
+- Handle and Sentry events from their SDKs
+- Scrub events to avoid exposing sensitive information
+- Check for the presence of authentication keys
+- Send events to NATs
+- Get consumers (sub) and producers (pub) on board with NATS.
+
+
+## TODO
+
+- Identify the project by the requested authentication keys.
+- By project, implement the rate-limit strategy
+- Adds cache strategies
+- In db-less mode, define yaml as an option
+- Adds MongoDB as an alternative for event persistence
+- Support BugsChannel HTTP routes
+- Grpc support
+- Adds Graylog as an plugin alternative
+- Adds Redis as an plugin alternative
+- Adds Rabbit as a channel alternative
+- Create an example using events and Kibana.
+- Create an example using Graylog and events.
+- Create an example using events and MongoDB.
+- Create an event user interface
+- Create a Helm Chart for Kubernetes deployments
+- Create a docker deployment example
+- Adds telemetry metrics with Prometheus and StatsD as options
+
 # Running project
 
 The command below starts a web application that listens on port 4000 by default.

@@ -37,6 +37,10 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Create a Helm Chart for Kubernetes deployments
 - Create a docker deployment example
 - Adds telemetry metrics with Prometheus and StatsD as options
+- Handle and Honeybadger events from their SDKs
+- Handle and Rollbar events from their SDKs
+- Create the BugsChannel logo.
+- Create a project diagram.
 
 # Running project
 

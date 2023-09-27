@@ -18,6 +18,7 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Check for the presence of authentication keys
 - Send events to NATs
 - Get consumers (sub) and producers (pub) on board with NATS
+- Create the BugsChannel logo
 
 
 ## TODO
@@ -41,7 +42,6 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Adds telemetry metrics with Prometheus and StatsD as options
 - Handle Honeybadger events from their SDKs
 - Handle Rollbar events from their SDKs
-- Create the BugsChannel logo
 - Create a project diagram
 
 # Running project

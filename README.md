@@ -1,5 +1,7 @@
 # BugsChannel
 
+![bugs channel logo](./images/logo.png)
+
 ![workflow](https://github.com/williampsena/bugs-channel/actions/workflows/main.yml/badge.svg)
 
 This repository contains information about handling issues with proxy. 
@@ -11,11 +13,11 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 # Challenges
 ## Done 👌
 
-- Handle and Sentry events from their SDKs
+- Handle Sentry events from their SDKs
 - Scrub events to avoid exposing sensitive information
 - Check for the presence of authentication keys
 - Send events to NATs
-- Get consumers (sub) and producers (pub) on board with NATS.
+- Get consumers (sub) and producers (pub) on board with NATS
 
 
 ## TODO
@@ -30,17 +32,17 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Adds Graylog as an plugin alternative
 - Adds Redis as an plugin alternative
 - Adds Rabbit as a channel alternative
-- Create an example using events and Kibana.
-- Create an example using Graylog and events.
-- Create an example using events and MongoDB.
+- Create an example using events and Kibana
+- Create an example using Graylog and events
+- Create an example using events and MongoDB
 - Create an event user interface
 - Create a Helm Chart for Kubernetes deployments
 - Create a docker deployment example
 - Adds telemetry metrics with Prometheus and StatsD as options
-- Handle and Honeybadger events from their SDKs
-- Handle and Rollbar events from their SDKs
-- Create the BugsChannel logo.
-- Create a project diagram.
+- Handle Honeybadger events from their SDKs
+- Handle Rollbar events from their SDKs
+- Create the BugsChannel logo
+- Create a project diagram
 
 # Running project
 

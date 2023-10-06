@@ -4,7 +4,7 @@ defmodule BugsChannel.Plugins.Sentry.Utils.EnvelopeParserTest do
 
   import ExUnit.CaptureLog
   import Mock
-  import BugsChannel.Test.Support.ApiHelper
+  import BugsChannel.Test.Support.FixtureHelper
 
   alias BugsChannel.Plugins.Sentry.Utils.EnvelopeParser, as: SentryEnvelopeParser
 

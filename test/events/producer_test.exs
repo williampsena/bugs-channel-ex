@@ -3,7 +3,7 @@ defmodule BugsChannel.Events.ProducerTest do
 
   import ExUnit.CaptureLog
   import Mox
-  import BugsChannel.Test.Support.ApiHelper
+  import BugsChannel.Test.Support.FixtureHelper
   import BugsChannel.Mocks.ChannelMocks
 
   alias BugsChannel.Events.Producer, as: EventProducer

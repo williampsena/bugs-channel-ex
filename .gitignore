@@ -24,3 +24,7 @@ bugs_channel-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Config files
+.config/**/*
+

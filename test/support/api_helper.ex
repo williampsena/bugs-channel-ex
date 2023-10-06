@@ -14,15 +14,4 @@ defmodule BugsChannel.Test.Support.ApiHelper do
   def put_params(conn, params) do
     %{conn | params: params}
   end
-
-  def load_fixture(filename), do: File.read!("test/fixtures/#{filename}")
-
-  def load_json_fixture(filename), do: filename |> load_fixture() |> decode_json!()
-
-  def load_file_and_json_fixture(filename) do
-    content = load_fixture(filename)
-    {content, decode_json!(content)}
-  end
-
-  defp decode_json!(content), do: Jason.decode!(content)
 end

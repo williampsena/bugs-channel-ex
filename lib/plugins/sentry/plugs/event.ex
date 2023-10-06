@@ -21,9 +21,7 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.Event do
         send_json_resp(conn, %{"event_id" => event_id})
 
       error ->
-        Logger.error(
-          "An error occurred while attempting to send raw events: #{inspect(error)}"
-        )
+        Logger.error("An error occurred while attempting to send raw events: #{inspect(error)}")
 
         send_unknown_error_resp(conn)
     end

@@ -47,13 +47,15 @@ defmodule BugsChannel.MixProject do
     [
       {:plug, "~> 1.14"},
       {:bandit, "~> 0.6"},
+      {:gen_stage, "~> 1.2"},
+      {:gnat, "~> 1.6"},
+      {:yaml_elixir, "~> 2.9"},
+      {:ecto, "~> 3.10"},
+      # testing deps
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.17.1", only: :test},
       {:mock, "~> 0.3.0", only: :test},
-      {:hammox, "~> 0.7", only: :test},
-      {:gen_stage, "~> 1.2"},
-      {:gnat, "~> 1.6"},
-      {:vex, "~> 0.9.1"}
+      {:hammox, "~> 0.7", only: :test}
     ]
   end
 

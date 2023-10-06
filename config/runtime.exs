@@ -19,16 +19,18 @@ if System.get_env("MIX_ENV") == "prod" do
     port: String.to_integer(System.get_env("SENTRY_PORT") || "4001")
 
   config :bugs_channel,
-    environment: String.to_atom(System.get_env("MIX_ENV") || "development")
+    environment: String.to_atom(System.get_env("MIX_ENV") || "development"),
+    config_file: System.get_env("CONFIG_FILE")
 end
 
-config :bugs_channel, :gnat,
-  enabled: System.get_env("GNATS_CHANNEL") == "nats",
-  host: System.get_env("GNATS_HOST") || "localhost",
-  port: String.to_integer(System.get_env("GNATS_PORT") || "4222"),
-  username: System.get_env("GNATS_USERNAME"),
-  password: System.get_env("GNATS_PASSWORD"),
-  auth_required: System.get_env("GNATS_AUTH_DISABLED") !== "true"
+channel_mode = System.get_env("CHANNEL_MODE")
+gnat_connections_url = System.get_env("GNATS_CONNECTIONS", "") |> String.split(~c"|")
+
+if channel_mode == "nats" do
+  config :bugs_channel, :gnat,
+    enabled: true,
+    connections_url: gnat_connections_url
+end
 
 config :bugs_channel, :scrubber,
   mask_keys: list_from_env("SCRUBBER_MASK_KEYS", "user|email|apikey"),

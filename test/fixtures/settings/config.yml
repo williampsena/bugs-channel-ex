@@ -1,0 +1,17 @@
+---
+version: "1"
+
+org: foo
+
+services:
+  - id: 1
+    name: foo bar service
+    platform: python
+    team: foo
+    settings:
+      rate-limit: 1
+      auth-keys:
+        - key: key
+teams:
+  - id: 1
+    name: foo

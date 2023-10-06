@@ -34,7 +34,9 @@ defmodule BugsChannel.Channels.EventChannelTest do
     end
 
     test "with fatal error", %{event_topic: event_topic, message: message} do
-      with_mock(ChannelMock, [:passthrough], publish: fn ^event_topic, ^message -> raise "oops" end) do
+      with_mock(ChannelMock, [:passthrough],
+        publish: fn ^event_topic, ^message -> raise "oops" end
+      ) do
         assert EventChannel.publish("foo-bar.1", message) == {:error, :publish_failed}
       end
     end

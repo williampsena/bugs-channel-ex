@@ -2,7 +2,7 @@ defmodule BugsChannel.Events.ScrubberTest do
   use ExUnit.Case, async: true
   use Plug.Test
 
-  import BugsChannel.Test.Support.ApiHelper
+  import BugsChannel.Test.Support.FixtureHelper
 
   alias BugsChannel.Events.Scrubber
 

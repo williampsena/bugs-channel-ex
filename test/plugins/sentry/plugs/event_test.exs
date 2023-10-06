@@ -4,6 +4,7 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.EventTest do
 
   import Mox
   import BugsChannel.Test.Support.ApiHelper
+  import BugsChannel.Test.Support.FixtureHelper
   import BugsChannel.Mocks.ChannelMocks
 
   alias BugsChannel.Plugins.Sentry.Plugs.Event, as: SentryEventPlug
@@ -38,10 +39,15 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.EventTest do
       event_id = event["event_id"]
       raw_event_topic = "raw-event"
       topic = "#{raw_event_topic}.#{event_id}"
-      
+
       raw_event_json = event |> Map.put("x-origin", "sentry") |> Jason.encode!()
 
-      [event_id: event_id, topic: topic, raw_event_topic: raw_event_topic, raw_event_json: raw_event_json]
+      [
+        event_id: event_id,
+        topic: topic,
+        raw_event_topic: raw_event_topic,
+        raw_event_json: raw_event_json
+      ]
     end
 
     test "when is valid event", %{

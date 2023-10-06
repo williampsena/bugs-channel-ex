@@ -5,7 +5,7 @@ defmodule BugsChannel.Plugins.Sentry.Event do
 
   require Logger
 
-  alias BugsChannel.Events.Event, as: BugsChannelEvent
+  alias BugsChannel.DB.Schemas.Event, as: BugsChannelEvent
 
   @title_max_len 100
 
@@ -14,10 +14,10 @@ defmodule BugsChannel.Plugins.Sentry.Event do
 
   ## Examples
 
-      iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => "foo", "project" => "bar", "items" => [ %{ "message" => "foo" } ] })
-      {:ok, [%BugsChannel.Events.Event{
-        id: "foo",
-        project_id: "bar",
+      iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => "1", "project" => 1, "items" => [ %{ "message" => "foo" } ] })
+      {:ok, [%BugsChannel.DB.Schemas.Event{
+        id: "1",
+        project_id: 1,
         platform: nil,
         environment: nil,
         release: nil,
@@ -26,32 +26,29 @@ defmodule BugsChannel.Plugins.Sentry.Event do
         body: "foo",
         stack_trace: nil,
         kind: "event",
-        level: nil,
-        origin: "sentry",
+        level: "error",
+        origin: :sentry,
         tags: [],
-        extra_args: nil,
-        timestamp: nil
+        extra_args: nil
       }]}
 
-      iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => "foo", "project" => "bar", "items" => [ %{"exception" => %{"values" => [ %{"type" => "FooException", "value" => "Bar messages" } ] } } ] })
-      {:ok, [%BugsChannel.Events.Event{
-        id: "foo",
-        project_id: "bar",
+      iex> event_id = "00000000-0000-0000-0000-000000000000"
+      iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => event_id, "project" => 1, "items" => [ %{"exception" => %{"values" => [ %{"type" => "FooException", "value" => "Bar messages" } ] } } ] })
+      {:ok, [%BugsChannel.DB.Schemas.Event{
+        id: "00000000-0000-0000-0000-000000000000",
+        project_id: 1,
         platform: nil,
         environment: nil,
         release: nil,
         server_name: nil,
         title: "FooException: Bar messages",
         body: "Bar messages",
-        stack_trace: %{
-          "values" => [%{"type" => "FooException", "value" => "Bar messages"}]
-        },
+        stack_trace: [%{"type" => "FooException", "value" => "Bar messages"}],
         kind: "error",
-        level: nil,
-        origin: "sentry",
+        level: "error",
+        origin: :sentry,
         tags: [],
-        extra_args: nil,
-        timestamp: nil
+        extra_args: nil
       }]}
 
       iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(nil)
@@ -69,23 +66,27 @@ defmodule BugsChannel.Plugins.Sentry.Event do
         Enum.map(event["items"], fn sentry_event ->
           %{title: title, body: body, kind: kind} = extract_event_data(sentry_event)
 
-          %BugsChannelEvent{
-            id: event["event_id"],
-            project_id: event["project"],
-            platform: sentry_event["platform"],
-            environment: sentry_event["environment"],
-            release: sentry_event["release"],
-            server_name: sentry_event["server_name"],
-            stack_trace: sentry_event["exception"],
-            title: title,
-            body: body,
-            level: sentry_event["level"],
-            kind: kind,
-            origin: "sentry",
-            tags: sentry_event["tags"] || [],
-            extra_args: sentry_event["extra"],
-            timestamp: sentry_event["timestamp"]
+          params = %{
+            "id" => "#{event["event_id"]}",
+            "project_id" => event["project"],
+            "platform" => sentry_event["platform"],
+            "environment" => sentry_event["environment"],
+            "release" => sentry_event["release"],
+            "server_name" => sentry_event["server_name"],
+            "stack_trace" => get_in(sentry_event, ~w(exception values)),
+            "title" => title,
+            "body" => body,
+            "level" => sentry_event["level"] || "error",
+            "kind" => kind,
+            "origin" => :sentry,
+            "tags" => sentry_event["tags"] || [],
+            "extra_args" => sentry_event["extra"],
+            "inserted_at" => sentry_event["timestamp"]
           }
+
+          with {:ok, event} <- BugsChannelEvent.parse(params) do
+            event
+          end
         end)
 
       {:ok, events}

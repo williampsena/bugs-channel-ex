@@ -14,11 +14,14 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.AuthKeyTest do
     conn =
       :get
       |> conn("/", "")
-      |> put_req_header("x-sentry-auth", "Sentry sentry_key=foo-bar, sentry_version=7, sentry_client=sentry.python/1.30.0")
+      |> put_req_header(
+        "x-sentry-auth",
+        "Sentry sentry_key=foo-bar, sentry_version=7, sentry_client=sentry.python/1.30.0"
+      )
       |> SentryAuthKeyPlug.call([])
 
-      refute conn.halted
-      assert conn.assigns[:auth_key] == "foo-bar"
+    refute conn.halted
+    assert conn.assigns[:auth_key] == "foo-bar"
   end
 
   test "when header x-sentry-auth is not present" do
@@ -27,8 +30,8 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.AuthKeyTest do
       |> conn("/", "")
       |> SentryAuthKeyPlug.call([])
 
-      assert conn.halted
-      assert_conn(conn, 401, "Missing credentials 🪪")
+    assert conn.halted
+    assert_conn(conn, 401, "Missing credentials 🪪")
   end
 
   test "when header x-sentry-auth is present with bad format" do
@@ -38,7 +41,7 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.AuthKeyTest do
       |> put_req_header("x-sentry-auth", "foo-bar")
       |> SentryAuthKeyPlug.call([])
 
-      assert conn.halted
-      assert_conn(conn, 401, "Missing credentials 🪪")
+    assert conn.halted
+    assert_conn(conn, 401, "Missing credentials 🪪")
   end
 end

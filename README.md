@@ -27,7 +27,7 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - By project, implement the rate-limit strategy
 - Adds cache strategies
 - In db-less mode, define yaml as an option
-- Adds MongoDB as an alternative for event persistence
+- Adds PostgreSQL as an alternative for event persistence
 - Support BugsChannel HTTP routes
 - Grpc support
 - Adds Graylog as an plugin alternative
@@ -35,7 +35,7 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Adds Rabbit as a channel alternative
 - Create an example using events and Kibana
 - Create an example using Graylog and events
-- Create an example using events and MongoDB
+- Create an example using events and PostgreSQL
 - Create an event user interface
 - Create a Helm Chart for Kubernetes deployments
 - Create a docker deployment example
@@ -43,6 +43,7 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Handle Honeybadger events from their SDKs
 - Handle Rollbar events from their SDKs
 - Create a project diagram
+- Adds MongoDB as an alternative for event persistence
 
 # Running project
 

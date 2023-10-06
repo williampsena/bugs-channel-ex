@@ -13,7 +13,7 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.AuthKey do
   end
 
   def call(conn, _opts) do
-    project_auth_key = feth_project_auth_key(conn)
+    project_auth_key = fetch_project_auth_key(conn)
 
     if is_nil(project_auth_key) do
       conn |> send_unauthorized_resp() |> halt()
@@ -22,7 +22,7 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.AuthKey do
     end
   end
 
-  def feth_project_auth_key(conn) do
+  def fetch_project_auth_key(conn) do
     sentry_auth_header = get_req_header(conn, "x-sentry-auth") |> List.first()
 
     if is_binary(sentry_auth_header) do

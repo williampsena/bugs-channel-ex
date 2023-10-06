@@ -21,7 +21,7 @@ defmodule BugsChannel.Router do
 
   match(_, do: send_not_found_resp(conn))
 
-  defp handle_errors(conn, error) do
+  def handle_errors(conn, error) do
     Logger.error("UnknownPlugRouteError #{inspect(error)}")
     send_unknown_error_resp(conn)
   end

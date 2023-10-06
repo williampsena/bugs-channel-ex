@@ -36,3 +36,7 @@ config :bugs_channel, :scrubber,
   mask_keys: list_from_env("SCRUBBER_MASK_KEYS", "user|email|apikey"),
   param_keys: list_from_env("SCRUBBER_PARAM_KEYS", "password|passwd|secret"),
   header_keys: list_from_env("SCRUBBER_HEADER_KEYS", "authorization|authentication|cookie")
+
+config :bugs_channel, :rate_limit,
+  requests: String.to_integer(System.get_env("RATE_LIMIT_REQUESTS") || "10"),
+  ttl: String.to_integer(System.get_env("RATE_LIMIT_TTL") || "60000")

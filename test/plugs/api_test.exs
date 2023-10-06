@@ -118,4 +118,26 @@ defmodule BugsChannel.Plugs.ApiTest do
       assert_conn(conn, 401, "Stop ✋!")
     end
   end
+
+  describe "send_too_many_requests_resp" do
+    test "with default message" do
+      conn =
+        :get
+        |> conn("/", "")
+        |> Api.send_too_many_requests_resp(1)
+
+      assert_conn(conn, 429, "Too Many Requests 😫")
+      assert {"x-rate-limit", "1"} in conn.resp_headers
+    end
+
+    test "with custom message" do
+      conn =
+        :get
+        |> conn("/", "")
+        |> Api.send_too_many_requests_resp(100, "Hold on ✋!")
+
+      assert_conn(conn, 429, "Hold on ✋!")
+      assert {"x-rate-limit", "100"} in conn.resp_headers
+    end
+  end
 end

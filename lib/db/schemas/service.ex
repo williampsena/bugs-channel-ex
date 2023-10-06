@@ -20,6 +20,9 @@ defmodule BugsChannel.DB.Schemas.Service do
       iex> BugsChannel.DB.Schemas.Service.changeset(%BugsChannel.DB.Schemas.Service{}, %{"id" => 1, "name" => "bar", "platform" => "python", "team" => "foo", "settings" => %{ "rate-limit" => 1, "auth-keys" => [ %{"key" => "key"}]} }).valid?
       true
 
+      iex> BugsChannel.DB.Schemas.Service.changeset(%BugsChannel.DB.Schemas.Service{}, %{"id" => 1, "name" => "ab", "platform" => "python", "team" => "foo", "settings" => %{ "rate-limit" => 1, "auth-keys" => [ %{"key" => "key"}]} }).valid?
+      false
+
       iex> BugsChannel.DB.Schemas.Service.changeset(%BugsChannel.DB.Schemas.Service{}, %{"id" => 1 }).valid?
       false
   """

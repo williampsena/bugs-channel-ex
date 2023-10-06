@@ -5,6 +5,7 @@ defmodule BugsChannel.Plugins.Sentry.Router do
   import BugsChannel.Utils.Config
   import BugsChannel.Plugs.Api
 
+  alias BugsChannel.Plugs.RateLimiter, as: RateLimiterPlug
   alias BugsChannel.Plugins.Sentry.Utils.EnvelopeParser, as: SentryEnvelopeParser
   alias BugsChannel.Plugins.Sentry.Plugs.AuthKey, as: SentryAuthKey
 
@@ -15,6 +16,8 @@ defmodule BugsChannel.Plugins.Sentry.Router do
   plug(:match)
 
   plug(SentryAuthKey)
+
+  plug(RateLimiterPlug, key: "event", by: [:assigns, :auth_key])
 
   plug(Plug.Parsers,
     parsers: [SentryEnvelopeParser],
@@ -28,7 +31,7 @@ defmodule BugsChannel.Plugins.Sentry.Router do
 
   match(_, do: send_not_found_resp(conn))
 
-  defp handle_errors(conn, error) do
+  def handle_errors(conn, error) do
     Logger.error("UnknownSentryPlugRouteError: #{inspect(error)}")
     send_unknown_error_resp(conn)
   end

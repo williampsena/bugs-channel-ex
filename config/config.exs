@@ -10,4 +10,7 @@ config :bugs_channel,
 
 config :bugs_channel, :default_channel, max_demand: 1
 
+config :hammer,
+  backend: {Hammer.Backend.ETS, [expiry_ms: 60_000, cleanup_interval_ms: 120_000]}
+
 import_config("#{config_env()}.exs")

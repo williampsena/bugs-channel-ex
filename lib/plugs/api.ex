@@ -36,4 +36,11 @@ defmodule BugsChannel.Plugs.Api do
   def send_unauthorized_resp(%Plug.Conn{} = conn, message \\ "Missing credentials 🪪") do
     send_resp(conn, 401, message)
   end
+
+  def send_too_many_requests_resp(%Plug.Conn{} = conn, limit, message \\ "Too Many Requests 😫")
+      when is_integer(limit) do
+    conn
+    |> put_resp_header("x-rate-limit", "#{limit}")
+    |> send_resp(429, message)
+  end
 end

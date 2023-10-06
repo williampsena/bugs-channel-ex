@@ -38,7 +38,7 @@ defmodule BugsChannel.MixProject do
 
   def extra_applications do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :hammer]
     ]
   end
 
@@ -51,6 +51,12 @@ defmodule BugsChannel.MixProject do
       {:gnat, "~> 1.6"},
       {:yaml_elixir, "~> 2.9"},
       {:ecto, "~> 3.10"},
+      {:hammer, "~> 6.1"},
+
+      # development deps
+      {:dialyxir, "~> 1.1", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.28", only: :dev},
+
       # testing deps
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.17.1", only: :test},

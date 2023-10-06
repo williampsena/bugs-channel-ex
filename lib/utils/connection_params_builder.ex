@@ -86,8 +86,7 @@ defmodule BugsChannel.Utils.ConnectionParamsBuilder do
         value == "true" || value == 1
 
       :number ->
-        {number, _} = Integer.parse("1")
-        number
+        String.to_integer("1")
 
       _ ->
         value

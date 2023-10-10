@@ -9,9 +9,9 @@ services:
     platform: python
     team: foo
     settings:
-      rate-limit: 1
-      auth-keys:
-        - key: key
+      rate_limit: 1
+    auth_keys:
+      - key: key
 teams:
   - id: 1
     name: foo

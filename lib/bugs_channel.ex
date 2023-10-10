@@ -16,6 +16,7 @@ defmodule BugsChannel do
   def start(_type, _args) do
     children =
       [
+        {BugsChannel.Cache, []},
         {Bandit, plug: BugsChannel.Router, port: server_port()}
       ] ++
         maybe_build_config_file_agent() ++

@@ -37,6 +37,10 @@ defmodule BugsChannel.Plugs.Api do
     send_resp(conn, 401, message)
   end
 
+  def send_forbidden_resp(%Plug.Conn{} = conn, message \\ "Forbidden ⛔") do
+    send_resp(conn, 403, message)
+  end
+
   def send_too_many_requests_resp(%Plug.Conn{} = conn, limit, message \\ "Too Many Requests 😫")
       when is_integer(limit) do
     conn

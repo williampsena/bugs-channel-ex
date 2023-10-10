@@ -1,5 +1,5 @@
 defmodule BugsChannel.Plugins.Sentry.RouterTest do
-  use ExUnit.Case
+  use BugsChannel.Case.SettingsManagerTestCase
   use Plug.Test
 
   import Mock
@@ -9,8 +9,9 @@ defmodule BugsChannel.Plugins.Sentry.RouterTest do
   alias BugsChannel.Plugins.Sentry.Router
   alias BugsChannel.Plugins.Sentry.Plugs.Event, as: SentryEventPlug
 
-  @sentry_auth_header "Sentry sentry_key=foo-bar, sentry_version=7, sentry_client=sentry.python/1.30.0"
+  @sentry_auth_header "Sentry sentry_key=key, sentry_version=7, sentry_client=sentry.python/1.30.0"
 
+  @tag starts_with_config_file: :default
   test "returns not found" do
     conn =
       :get
@@ -21,6 +22,7 @@ defmodule BugsChannel.Plugins.Sentry.RouterTest do
     assert_conn(conn, 404, "Oops! 👀")
   end
 
+  @tag starts_with_config_file: :default
   test "returns unknown error" do
     with_mock(SentryEventPlug, [:passthrough], call: fn _, _ -> raise "oops" end) do
       conn =
@@ -37,6 +39,7 @@ defmodule BugsChannel.Plugins.Sentry.RouterTest do
     end
   end
 
+  @tag starts_with_config_file: :default
   test "forward sentry event" do
     with_mock(SentryEventPlug, [:passthrough], call: fn conn, _ -> send_resp(conn, 204, "") end) do
       conn =

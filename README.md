@@ -21,12 +21,13 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Create the BugsChannel logo
 - Implement the rate-limit strategy
 - In db-less mode, define yaml as an option
+- Identify the project by the requested authentication keys
+- Adds cache strategies
 
 ## TODO
 
-- Identify the project by the requested authentication keys.
+- Generate documentation with ex_doc
 - By project, implement the rate-limit strategy
-- Adds cache strategies
 - Adds PostgreSQL as an alternative for event persistence
 - Support BugsChannel HTTP routes
 - Grpc support
@@ -49,13 +50,59 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 
 The command below starts a web application that listens on port 4000 by default.
 
+
+
 ```shell
+# verbose mode
+export LOG_LEVEL=debug
+
 mix api
 # or
 mix run --no-halt
 ```
 
+The project listens on ports 4000 (local) and 4001 (sentry). At the moment, just Sentry had been set up and you could test the following steps.
+
+- Create a config file named `config.yml` to run as **dbless** mode.
+
+```shell
+cp test/fixtures/settings/config.yml .config/config.yml
+```
+
+- Create a file named `main.py`.
+
+```python
+import sentry_sdk
+
+sentry_sdk.init(
+    "http://key@localhost:4001/1",
+    traces_sample_rate=1.0,
+)
+
+raise ValueError("Error SDK")
+```
+
+- Install python packages
+
+```shell
+# using venv
+python -m venv .env
+. .env/bin/activate
+pip install sentry-sdk
+
+# without venv
+pip install --user sentry-sdk
+```
+
+- Now you can run project
+
+```shell
+python main.py
+```
+
 # Tests
+
+> Principles: Of course, the acceptable test coverage is 100% guaranteed by the pipeline. 👌
 
 ```shell
 mix test

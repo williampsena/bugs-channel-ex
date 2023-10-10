@@ -1,4 +1,4 @@
-defmodule BugsChannel.DB.Schemas.Team do
+defmodule BugsChannel.Repo.Schemas.Team do
   @moduledoc """
   The module represents a configuration team struct.
   """
@@ -14,10 +14,10 @@ defmodule BugsChannel.DB.Schemas.Team do
 
   ## Examples
 
-      iex> BugsChannel.DB.Schemas.Team.changeset(%BugsChannel.DB.Schemas.Team{}, %{"id" => 1, "name" => "foo" }).valid?
+      iex> BugsChannel.Repo.Schemas.Team.changeset(%BugsChannel.Repo.Schemas.Team{}, %{"id" => 1, "name" => "foo" }).valid?
       true
 
-      iex> BugsChannel.DB.Schemas.Team.changeset(%BugsChannel.DB.Schemas.Team{}, %{ "id" => "foo" }).valid?
+      iex> BugsChannel.Repo.Schemas.Team.changeset(%BugsChannel.Repo.Schemas.Team{}, %{ "id" => "foo" }).valid?
       false
   """
   def changeset(%__MODULE__{} = team, params) do

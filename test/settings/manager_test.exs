@@ -1,34 +1,13 @@
 defmodule BugsChannel.Settings.ManagerTest do
-  use ExUnit.Case
+  use BugsChannel.Case.SettingsManagerTestCase
+  import BugsChannel.Factories.ConfigFile
 
   alias BugsChannel.Settings.Manager, as: SettingsManager
 
-  setup do
-    on_exit(fn ->
-      Application.put_env(:bugs_channel, :dbless, "postgres")
-      Application.put_env(:bugs_channel, :conf_file, nil)
-    end)
+  setup :reset_settings_manager_on_exit!
 
-    config_file =
-      %BugsChannel.Settings.Schemas.ConfigFile{
-        org: "foo",
-        services: [
-          %BugsChannel.DB.Schemas.Service{
-            id: 1,
-            name: "foo bar service",
-            platform: "python",
-            settings: %{"auth-keys" => [%{"key" => "key"}], "rate-limit" => 1},
-            team: "foo"
-          }
-        ],
-        teams: [
-          %BugsChannel.DB.Schemas.Team{
-            id: 1,
-            name: "foo"
-          }
-        ],
-        version: "1"
-      }
+  setup do
+    config_file = build(:config_file)
 
     [config_file: config_file]
   end
@@ -59,35 +38,33 @@ defmodule BugsChannel.Settings.ManagerTest do
     end
   end
 
-  test "start_link/1" do
-    Application.put_env(:bugs_channel, :config_file, "test/fixtures/settings/config.yml")
-    Application.put_env(:bugs_channel, :database_mode, "dbless")
+  describe "start_link/1" do
+    setup do
+      Application.put_env(:bugs_channel, :config_file, "test/fixtures/settings/config.yml")
 
-    assert match?({:ok, _}, SettingsManager.start_link(nil))
+      :ok
+    end
+
+    test "without options" do
+      assert match?({:ok, _}, SettingsManager.start_link(nil))
+    end
+
+    test "with options" do
+      assert match?(
+               {:ok, _},
+               SettingsManager.start_link(config_file: "test/fixtures/settings/config.yml")
+             )
+    end
+
+    test "with nil" do
+      Application.put_env(:bugs_channel, :config_file, nil)
+
+      assert SettingsManager.start_link([]) == :invalid_config_file
+    end
   end
 
-  test "get_config_file/1" do
-    {:ok, _pid} = SettingsManager.start_link(nil)
-
-    assert SettingsManager.get_config_file() == {
-             :ok,
-             %BugsChannel.Settings.Schemas.ConfigFile{
-               id: nil,
-               version: "1",
-               org: "foo",
-               services: [
-                 %BugsChannel.DB.Schemas.Service{
-                   id: 1,
-                   name: "foo bar service",
-                   platform: "python",
-                   team: "foo",
-                   settings: %{"auth-keys" => [%{"key" => "key"}], "rate-limit" => 1}
-                 }
-               ],
-               teams: [
-                 %BugsChannel.DB.Schemas.Team{id: 1, name: "foo"}
-               ]
-             }
-           }
+  @tag starts_with_config_file: :default
+  test "get_config_file/1", %{config_file: config_file} do
+    assert SettingsManager.get_config_file() == config_file
   end
 end

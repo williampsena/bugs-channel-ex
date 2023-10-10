@@ -5,7 +5,7 @@ defmodule BugsChannel.Plugins.Sentry.Event do
 
   require Logger
 
-  alias BugsChannel.DB.Schemas.Event, as: BugsChannelEvent
+  alias BugsChannel.Repo.Schemas.Event, as: BugsChannelEvent
 
   @title_max_len 100
 
@@ -15,9 +15,9 @@ defmodule BugsChannel.Plugins.Sentry.Event do
   ## Examples
 
       iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => "1", "project" => 1, "items" => [ %{ "message" => "foo" } ] })
-      {:ok, [%BugsChannel.DB.Schemas.Event{
+      {:ok, [%BugsChannel.Repo.Schemas.Event{
         id: "1",
-        project_id: 1,
+        service_id: 1,
         platform: nil,
         environment: nil,
         release: nil,
@@ -34,9 +34,9 @@ defmodule BugsChannel.Plugins.Sentry.Event do
 
       iex> event_id = "00000000-0000-0000-0000-000000000000"
       iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => event_id, "project" => 1, "items" => [ %{"exception" => %{"values" => [ %{"type" => "FooException", "value" => "Bar messages" } ] } } ] })
-      {:ok, [%BugsChannel.DB.Schemas.Event{
+      {:ok, [%BugsChannel.Repo.Schemas.Event{
         id: "00000000-0000-0000-0000-000000000000",
-        project_id: 1,
+        service_id: 1,
         platform: nil,
         environment: nil,
         release: nil,
@@ -54,7 +54,7 @@ defmodule BugsChannel.Plugins.Sentry.Event do
       iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(nil)
       {:error, :invalid_sentry_event}
 
-      iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => "foo", "project" => "bar" })
+      iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => "foo", "service" => "bar" })
       {:error, :invalid_sentry_event}
 
   """
@@ -68,7 +68,7 @@ defmodule BugsChannel.Plugins.Sentry.Event do
 
           params = %{
             "id" => "#{event["event_id"]}",
-            "project_id" => event["project"],
+            "service_id" => event["project"],
             "platform" => sentry_event["platform"],
             "environment" => sentry_event["environment"],
             "release" => sentry_event["release"],

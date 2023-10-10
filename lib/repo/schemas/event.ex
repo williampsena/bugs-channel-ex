@@ -1,4 +1,4 @@
-defmodule BugsChannel.DB.Schemas.Event do
+defmodule BugsChannel.Repo.Schemas.Event do
   @moduledoc """
   The module represents a Event struct.
   """
@@ -9,7 +9,7 @@ defmodule BugsChannel.DB.Schemas.Event do
   @foreign_key_type :string
 
   schema "event" do
-    field(:project_id, :integer)
+    field(:service_id, :integer)
     field(:meta_id, :string)
     field(:platform, :string)
     field(:environment, :string, default: "production")
@@ -28,21 +28,21 @@ defmodule BugsChannel.DB.Schemas.Event do
   end
 
   @doc ~S"""
-  Parses project from config file
+  Parses map to event schema
 
   ## Examples
 
-      iex> BugsChannel.DB.Schemas.Event.changeset(%BugsChannel.DB.Schemas.Event{}, %{ "id" => "abc123", "origin" => "home", "title" => "some error", "body" => "error", "project_id" => 1, "platform" => "elixir", "release" => "git-hash", "server_name" => "foo", "kind" => "error", "environment" => "production", "stack_trace" => [], "tags" => [] }).valid?
+      iex> BugsChannel.Repo.Schemas.Event.changeset(%BugsChannel.Repo.Schemas.Event{}, %{ "id" => "abc123", "origin" => "home", "title" => "some error", "body" => "error", "service_id" => 1, "platform" => "elixir", "release" => "git-hash", "server_name" => "foo", "kind" => "error", "environment" => "production", "stack_trace" => [], "tags" => [] }).valid?
       true
 
-      iex> BugsChannel.DB.Schemas.Event.changeset(%BugsChannel.DB.Schemas.Event{}, %{"id" => 1 }).valid?
+      iex> BugsChannel.Repo.Schemas.Event.changeset(%BugsChannel.Repo.Schemas.Event{}, %{"id" => 1 }).valid?
       false
   """
   def changeset(%__MODULE__{} = event, params) do
     event
     |> cast(
       params,
-      ~w(id project_id platform environment release server_name title body kind level origin stack_trace tags extra_args)a
+      ~w(id service_id platform environment release server_name title body kind level origin stack_trace tags extra_args)a
     )
     |> validate_required(~w(level title body kind origin tags)a)
   end
@@ -52,11 +52,11 @@ defmodule BugsChannel.DB.Schemas.Event do
 
   ## Examples
 
-      iex> BugsChannel.DB.Schemas.Event.parse(%{ "title" => "foo", "body" => "bar", "kind" => "error", "tags" => ["foo:bar"] })
+      iex> BugsChannel.Repo.Schemas.Event.parse(%{ "title" => "foo", "body" => "bar", "kind" => "error", "tags" => ["foo:bar"] })
       {:ok,
-      %BugsChannel.DB.Schemas.Event{
+      %BugsChannel.Repo.Schemas.Event{
         id: nil,
-        project_id: nil,
+        service_id: nil,
         meta_id: nil,
         platform: nil,
         environment: "production",
@@ -74,7 +74,7 @@ defmodule BugsChannel.DB.Schemas.Event do
         updated_at: nil
       }}
 
-      iex> {:error, changeset } = BugsChannel.DB.Schemas.Event.parse(%{ "id" => "foo" })
+      iex> {:error, changeset } = BugsChannel.Repo.Schemas.Event.parse(%{ "id" => "foo" })
       iex> [changeset.valid?, changeset.errors]
       [
         false,

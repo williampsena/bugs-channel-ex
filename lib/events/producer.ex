@@ -6,7 +6,7 @@ defmodule BugsChannel.Events.Producer do
 
   require Logger
 
-  alias BugsChannel.DB.Schemas.Event
+  alias BugsChannel.Repo.Schemas.Event
   alias BugsChannel.Events.{Scrubber, EventPublisher}
   alias BugsChannel.Plugins.Sentry.Event, as: SentryEvent
 

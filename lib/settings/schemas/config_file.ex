@@ -5,14 +5,14 @@ defmodule BugsChannel.Settings.Schemas.ConfigFile do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias BugsChannel.DB.Schemas, as: DBSchemas
+  alias BugsChannel.Repo.Schemas, as: RepoSchemas
 
   schema "config_file" do
     field(:version, :string)
     field(:org, :string)
 
-    embeds_many(:services, DBSchemas.Service)
-    embeds_many(:teams, DBSchemas.Team)
+    embeds_many(:services, RepoSchemas.Service)
+    embeds_many(:teams, RepoSchemas.Team)
   end
 
   @doc ~S"""
@@ -20,7 +20,7 @@ defmodule BugsChannel.Settings.Schemas.ConfigFile do
 
   ## Examples
 
-      iex> BugsChannel.Settings.Schemas.ConfigFile.changeset(%BugsChannel.Settings.Schemas.ConfigFile{}, %{ "version" => "1", "org" => "Foo", "services" => [ %{"id" => 1, "name" => "bar", "platform" => "python", "team" => "foo", "settings" => %{ "rate-limit" => 1, "auth-keys" => [ %{"key" => "key"}]} } ], "teams" => [ %{"id" => 1, "name" => "Foo"} ]  }).valid?
+      iex> BugsChannel.Settings.Schemas.ConfigFile.changeset(%BugsChannel.Settings.Schemas.ConfigFile{}, %{ "version" => "1", "org" => "Foo", "services" => [ %{"id" => 1, "name" => "bar", "platform" => "python", "team" => "foo", "settings" => %{ "rate_limit" => 1, "auth-keys" => [ %{"key" => "key"}]} } ], "teams" => [ %{"id" => 1, "name" => "Foo"} ]  }).valid?
       true
 
       iex> BugsChannel.Settings.Schemas.ConfigFile.changeset(%BugsChannel.Settings.Schemas.ConfigFile{}, %{ "id" => "foo" }).valid?
@@ -45,22 +45,30 @@ defmodule BugsChannel.Settings.Schemas.ConfigFile do
 
   ## Examples
 
-      iex> BugsChannel.Settings.Schemas.ConfigFile.parse(%{ "version" => "1", "org" => "Foo", "services" => [ %{"id" => 1, "name" => "bar", "platform" => "python", "team" => "foo", "settings" => %{ "rate-limit" => 1, "auth-keys" => [ %{"key" => "key"}]} } ], "teams" => [ %{"id" => 1, "name" => "Foo"} ]  })
+      iex> BugsChannel.Settings.Schemas.ConfigFile.parse(%{ "version" => "1", "org" => "Foo", "services" => [ %{"id" => 1, "name" => "bar", "platform" => "python", "team" => "foo", "settings" => %{ "rate_limit" => 1}, "auth_keys" => [ %{"key" => "key"} ]  } ], "teams" => [ %{"id" => 1, "name" => "Foo"} ]  })
       {
         :ok,
         %BugsChannel.Settings.Schemas.ConfigFile{
           org: "Foo",
           services: [
-            %BugsChannel.DB.Schemas.Service{
+            %BugsChannel.Repo.Schemas.Service{
               id: 1,
               name: "bar",
               platform: "python",
-              settings: %{"auth-keys" => [%{"key" => "key"}], "rate-limit" => 1},
+              auth_keys: [
+                %BugsChannel.Repo.Schemas.ServiceAuthKeys{
+                  id: nil,
+                  key: "key",
+                  disabled: false,
+                  expired_at: nil
+                }
+              ],
+              settings: %BugsChannel.Repo.Schemas.ServiceSettings{ id: nil, rate_limit: 1},
               team: "foo"
             }
           ],
           teams: [
-            %BugsChannel.DB.Schemas.Team{
+            %BugsChannel.Repo.Schemas.Team{
               id: 1,
               name: "Foo"
             }

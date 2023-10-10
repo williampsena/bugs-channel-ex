@@ -6,8 +6,9 @@ defmodule BugsChannel.Plugins.Sentry.Router do
   import BugsChannel.Plugs.Api
 
   alias BugsChannel.Plugs.RateLimiter, as: RateLimiterPlug
+  alias BugsChannel.Plugs.CheckAuthKey, as: CheckAuthKeyPlug
   alias BugsChannel.Plugins.Sentry.Utils.EnvelopeParser, as: SentryEnvelopeParser
-  alias BugsChannel.Plugins.Sentry.Plugs.AuthKey, as: SentryAuthKey
+  alias BugsChannel.Plugins.Sentry.Plugs.AuthKey, as: SentryAuthKeyPlug
 
   require Logger
 
@@ -15,7 +16,8 @@ defmodule BugsChannel.Plugins.Sentry.Router do
 
   plug(:match)
 
-  plug(SentryAuthKey)
+  plug(SentryAuthKeyPlug)
+  plug(CheckAuthKeyPlug)
 
   plug(RateLimiterPlug, key: "event", by: [:assigns, :auth_key])
 

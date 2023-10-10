@@ -3,7 +3,7 @@ defmodule BugsChannel.Channels.Gnat.Consumer do
   The module is in responsible for consuming messages from NATs.
   """
   defmacro __using__(_opts) do
-    quote do
+    quote location: :keep do
       require Logger
 
       @behaviour Gnat.Server

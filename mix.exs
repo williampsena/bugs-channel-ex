@@ -52,6 +52,10 @@ defmodule BugsChannel.MixProject do
       {:yaml_elixir, "~> 2.9"},
       {:ecto, "~> 3.10"},
       {:hammer, "~> 6.1"},
+      {:nebulex, "~> 2.5"},
+      {:shards, "~> 1.1"},
+      {:decorator, "~> 1.4"},
+      {:telemetry, "~> 1.0"},
 
       # development deps
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false},
@@ -61,7 +65,8 @@ defmodule BugsChannel.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.17.1", only: :test},
       {:mock, "~> 0.3.0", only: :test},
-      {:hammox, "~> 0.7", only: :test}
+      {:hammox, "~> 0.7", only: :test},
+      {:ex_machina, "~> 2.7.0", only: :test},
     ]
   end
 

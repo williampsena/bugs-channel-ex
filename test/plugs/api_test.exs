@@ -119,6 +119,26 @@ defmodule BugsChannel.Plugs.ApiTest do
     end
   end
 
+   describe "send_forbidden_resp" do
+    test "with default message" do
+      conn =
+        :get
+        |> conn("/", "")
+        |> Api.send_forbidden_resp()
+
+      assert_conn(conn, 403, "Forbidden ⛔")
+    end
+
+    test "with custom message" do
+      conn =
+        :get
+        |> conn("/", "")
+        |> Api.send_forbidden_resp("Stop 🙅‍♀️!")
+
+      assert_conn(conn, 403, "Stop 🙅‍♀️!")
+    end
+  end
+
   describe "send_too_many_requests_resp" do
     test "with default message" do
       conn =

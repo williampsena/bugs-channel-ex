@@ -13,20 +13,20 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.AuthKey do
   end
 
   def call(conn, _opts) do
-    project_auth_key = fetch_project_auth_key(conn)
+    service_auth_key = fetch_service_auth_key(conn)
 
-    if is_nil(project_auth_key) do
+    if is_nil(service_auth_key) do
       conn |> send_unauthorized_resp() |> halt()
     else
-      assign(conn, :auth_key, project_auth_key)
+      assign(conn, :auth_key, service_auth_key)
     end
   end
 
-  def fetch_project_auth_key(conn) do
+  def fetch_service_auth_key(conn) do
     sentry_auth_header = get_req_header(conn, "x-sentry-auth") |> List.first()
 
     if is_binary(sentry_auth_header) do
-      match = ~r/sentry_key=(?<value>.[^,]+)/ |> Regex.named_captures(sentry_auth_header)
+      match = ~r/sentry_key=(?<value>.+?),/ |> Regex.named_captures(sentry_auth_header)
       if is_map(match), do: match["value"]
     end
   end

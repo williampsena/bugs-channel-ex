@@ -4,12 +4,15 @@ defmodule BugsChannelTest do
   import Mock
   import ExUnit.CaptureLog
 
+  @cache_start_link {BugsChannel.Cache, []}
+  @web_start_link {Bandit, [plug: BugsChannel.Router, port: 4000]}
+
   setup do
     sentry_config = Application.get_env(:bugs_channel, :sentry)
     gnat_config = Application.get_env(:bugs_channel, :gnat)
 
     on_exit(fn ->
-      Application.put_env(:bugs_channel, :dbless, "postgres")
+      Application.put_env(:bugs_channel, :database_mode, "postgres")
       Application.put_env(:bugs_channel, :conf_file, nil)
       Application.put_env(:bugs_channel, :sentry, sentry_config)
       Application.put_env(:bugs_channel, :gnat, gnat_config)
@@ -33,7 +36,11 @@ defmodule BugsChannelTest do
 
         assert_called(
           Supervisor.start_link(
-            [{Bandit, [plug: BugsChannel.Router, port: 4000]}, {BugsChannel.Events.Producer, []}],
+            [
+              @cache_start_link,
+              @web_start_link,
+              {BugsChannel.Events.Producer, []}
+            ],
             strategy: :one_for_one,
             name: BugsChannel.Supervisor
           )
@@ -51,7 +58,8 @@ defmodule BugsChannelTest do
         assert_called(
           Supervisor.start_link(
             [
-              {Bandit, [plug: BugsChannel.Router, port: 4000]},
+              @cache_start_link,
+              @web_start_link,
               {BugsChannel.Settings.Manager, []},
               {BugsChannel.Events.Producer, []}
             ],
@@ -72,7 +80,8 @@ defmodule BugsChannelTest do
         assert_called(
           Supervisor.start_link(
             [
-              {Bandit, [plug: BugsChannel.Router, port: 4000]},
+              @cache_start_link,
+              @web_start_link,
               {Bandit, [plug: BugsChannel.Plugins.Sentry.Router, port: 4001]},
               {BugsChannel.Events.Producer, []}
             ],
@@ -99,7 +108,8 @@ defmodule BugsChannelTest do
         assert_called(
           Supervisor.start_link(
             [
-              {Bandit, [plug: BugsChannel.Router, port: 4000]},
+              @cache_start_link,
+              @web_start_link,
               {Gnat.ConnectionSupervisor,
                %{
                  name: :gnat,

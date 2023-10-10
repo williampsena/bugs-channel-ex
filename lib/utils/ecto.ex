@@ -8,11 +8,11 @@ defmodule BugsChannel.Utils.Ecto do
 
   ## Examples
 
-    iex> BugsChannel.Utils.Ecto.translate_errors({:ok, %Ecto.Changeset{ valid?: false, errors: [ project_id: {"is invalid", [type: :integer, validation: :cast]}, stack_trace: {"is invalid", [type: {:array, :map}, validation: :cast]} ] } })
-    ["project_id: is invalid", "stack_trace: is invalid"]
+    iex> BugsChannel.Utils.Ecto.translate_errors({:ok, %Ecto.Changeset{ valid?: false, errors: [ service_id: {"is invalid", [type: :integer, validation: :cast]}, stack_trace: {"is invalid", [type: {:array, :map}, validation: :cast]} ] } })
+    ["service_id: is invalid", "stack_trace: is invalid"]
 
-    iex> BugsChannel.Utils.Ecto.translate_errors({:ok, %Ecto.Changeset{ valid?: false, errors: [ foo: :bar, project_id: {"is invalid", [type: :integer, validation: :cast]}, stack_trace: {"is invalid", [type: {:array, :map}, validation: :cast]} ] } })
-    ["foo: :bar", "project_id: is invalid", "stack_trace: is invalid"]
+    iex> BugsChannel.Utils.Ecto.translate_errors({:ok, %Ecto.Changeset{ valid?: false, errors: [ foo: :bar, service_id: {"is invalid", [type: :integer, validation: :cast]}, stack_trace: {"is invalid", [type: {:array, :map}, validation: :cast]} ] } })
+    ["foo: :bar", "service_id: is invalid", "stack_trace: is invalid"]
 
     iex> BugsChannel.Utils.Ecto.translate_errors(:ok)
     []

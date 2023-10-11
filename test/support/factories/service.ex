@@ -13,7 +13,9 @@ defmodule BugsChannel.Factories.Service do
       team: "foo",
       settings: service_settings_factory(),
       auth_keys: [
-        service_auth_key_factory()
+        service_auth_key_factory(),
+        expired_service_auth_key_factory(),
+        disabled_service_auth_key_factory()
       ]
     }
   end
@@ -26,10 +28,22 @@ defmodule BugsChannel.Factories.Service do
   end
 
   def service_auth_key_factory do
-    %BugsChannel.Repo.Schemas.ServiceAuthKeys{
+    %BugsChannel.Repo.Schemas.ServiceAuthKey{
       key: "key",
       disabled: false,
       expired_at: nil
     }
+  end
+
+  defp expired_service_auth_key_factory() do
+    %BugsChannel.Repo.Schemas.ServiceAuthKey{
+      key: "expired_key",
+      disabled: false,
+      expired_at: ~D[2000-01-01]
+    }
+  end
+
+  defp disabled_service_auth_key_factory() do
+    %BugsChannel.Repo.Schemas.ServiceAuthKey{key: "disabled_key", disabled: true, expired_at: nil}
   end
 end

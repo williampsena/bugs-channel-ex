@@ -56,7 +56,7 @@ defmodule BugsChannel.Settings.Schemas.ConfigFile do
               name: "bar",
               platform: "python",
               auth_keys: [
-                %BugsChannel.Repo.Schemas.ServiceAuthKeys{
+                %BugsChannel.Repo.Schemas.ServiceAuthKey{
                   id: nil,
                   key: "key",
                   disabled: false,

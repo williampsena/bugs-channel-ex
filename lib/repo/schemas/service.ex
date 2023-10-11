@@ -12,7 +12,7 @@ defmodule BugsChannel.Repo.Schemas.Service do
     field(:platform, :string)
     field(:team, :string, default: "bugs")
     embeds_one(:settings, RepoSchemas.ServiceSettings)
-    embeds_many(:auth_keys, RepoSchemas.ServiceAuthKeys)
+    embeds_many(:auth_keys, RepoSchemas.ServiceAuthKey)
   end
 
   @doc ~S"""

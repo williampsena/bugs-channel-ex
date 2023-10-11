@@ -33,6 +33,8 @@ defmodule BugsChannel.Repo.DBLess.ServiceTest do
     @tag starts_with_config_file: :default
     test "when a service is not found" do
       assert Repo.Service.get_by_auth_key("invalid_key") == nil
+      assert Repo.Service.get_by_auth_key("expired_key") == nil
+      assert Repo.Service.get_by_auth_key("disabled_key") == nil
     end
   end
 end

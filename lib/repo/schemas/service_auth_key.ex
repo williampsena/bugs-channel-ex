@@ -1,4 +1,4 @@
-defmodule BugsChannel.Repo.Schemas.ServiceAuthKeys do
+defmodule BugsChannel.Repo.Schemas.ServiceAuthKey do
   @moduledoc """
   The module represents a configuration service struct.
   """
@@ -16,10 +16,10 @@ defmodule BugsChannel.Repo.Schemas.ServiceAuthKeys do
 
   ## Examples
 
-      iex> BugsChannel.Repo.Schemas.ServiceAuthKeys.changeset(%BugsChannel.Repo.Schemas.ServiceAuthKeys{}, %{ "key" => "key", "disabled" => true, "expired_at" => nil }).valid?
+      iex> BugsChannel.Repo.Schemas.ServiceAuthKey.changeset(%BugsChannel.Repo.Schemas.ServiceAuthKey{}, %{ "key" => "key", "disabled" => true, "expired_at" => nil }).valid?
       true
 
-      iex> BugsChannel.Repo.Schemas.ServiceAuthKeys.changeset(%BugsChannel.Repo.Schemas.ServiceAuthKeys{}, %{ "key" => nil, "disabled" => true, "expired_at" => nil }).valid?
+      iex> BugsChannel.Repo.Schemas.ServiceAuthKey.changeset(%BugsChannel.Repo.Schemas.ServiceAuthKey{}, %{ "key" => nil, "disabled" => true, "expired_at" => nil }).valid?
       false
   """
   def changeset(%__MODULE__{} = auth_keys, params) do

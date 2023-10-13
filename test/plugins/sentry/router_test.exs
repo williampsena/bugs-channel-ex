@@ -11,7 +11,7 @@ defmodule BugsChannel.Plugins.Sentry.RouterTest do
 
   @sentry_auth_header "Sentry sentry_key=key, sentry_version=7, sentry_client=sentry.python/1.30.0"
 
-  @tag starts_with_config_file: :default
+  @tag :starts_with_mocks
   test "returns not found" do
     conn =
       :get
@@ -22,7 +22,7 @@ defmodule BugsChannel.Plugins.Sentry.RouterTest do
     assert_conn(conn, 404, "Oops! 👀")
   end
 
-  @tag starts_with_config_file: :default
+  @tag :starts_with_mocks
   test "returns unknown error" do
     with_mock(SentryEventPlug, [:passthrough], call: fn _, _ -> raise "oops" end) do
       conn =
@@ -39,7 +39,7 @@ defmodule BugsChannel.Plugins.Sentry.RouterTest do
     end
   end
 
-  @tag starts_with_config_file: :default
+  @tag :starts_with_mocks
   test "forward sentry event" do
     with_mock(SentryEventPlug, [:passthrough], call: fn conn, _ -> send_resp(conn, 204, "") end) do
       conn =

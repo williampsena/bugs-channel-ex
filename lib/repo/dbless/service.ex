@@ -3,7 +3,7 @@ defmodule BugsChannel.Repo.DBless.Service do
   This module contains the DBLess mode service repository.
   """
 
-  alias BugsChannel.Settings.Manager, as: SettingsManager
+  alias BugsChannel.Settings.Context
   alias BugsChannel.Repo.Schemas, as: RepoSchemas
 
   @spec get(String.t()) :: RepoSchemas.Service
@@ -24,7 +24,7 @@ defmodule BugsChannel.Repo.DBless.Service do
   end
 
   defp do_query(query) do
-    config_file = SettingsManager.get_config_file()
+    config_file = Context.manager().get_config_file()
     Enum.find(config_file.services, query)
   end
 end

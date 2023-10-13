@@ -4,10 +4,8 @@ defmodule BugsChannel.Services.FetcherTest do
 
   alias BugsChannel.Services.Fetcher, as: ServicesFetcher
 
-  setup :reset_settings_manager_on_exit!
-
   setup do
-    start_settings_manager()
+    setup_manager_mocks_expectations()
 
     service = build(:service)
 

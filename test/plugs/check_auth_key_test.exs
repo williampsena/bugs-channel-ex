@@ -10,7 +10,7 @@ defmodule BugsChannel.Plugs.CheckAuthKeyTest do
     assert CheckAuthKeyPlug.init(foo: "bar") == [foo: "bar"]
   end
 
-  @tag starts_with_config_file: :default
+  @tag :starts_with_mocks
   test "when requests there is valid x-auth-key header" do
     conn =
       :get
@@ -21,7 +21,7 @@ defmodule BugsChannel.Plugs.CheckAuthKeyTest do
     refute conn.halted
   end
 
-  @tag starts_with_config_file: :default
+  @tag :starts_with_mocks
   test "when requests there is invalid x-auth-key header" do
     conn =
       :get
@@ -33,7 +33,7 @@ defmodule BugsChannel.Plugs.CheckAuthKeyTest do
     assert_conn(conn, 401, "Missing credentials 🪪")
   end
 
-  @tag starts_with_config_file: :default
+  @tag :starts_with_mocks
   test "when requests there is assigns" do
     conn =
       :get

@@ -1,6 +1,6 @@
 defmodule BugsChannel.Mocks.ChannelMocks do
   @moduledoc """
-  This is the module in charge of mocks using mox.
+  This is the module in charge of channel mocks using mox.
   """
 
   import Mox

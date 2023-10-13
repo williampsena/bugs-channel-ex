@@ -4,7 +4,7 @@ defmodule BugsChannel.Channels.Behaviours.Channel do
   """
 
   @callback publish(state :: String.t(), message :: String.t()) ::
-              {:ok, new_state :: term} | {:error, reason :: term}
+              :ok | {:error, reason :: term}
 
   @callback build_topic(topic :: String.t(), id :: String.t()) :: String.t()
 end

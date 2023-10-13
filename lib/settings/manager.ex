@@ -7,13 +7,14 @@ defmodule BugsChannel.Settings.Manager do
 
   alias BugsChannel.Settings.Schemas.ConfigFile
 
+  @behaviour BugsChannel.Settings.Behaviours.Manager
+
   def start_link(opts) do
     with {:ok, config} <- load_from_file(opts[:config_file] || config_filepath()) do
       Agent.start_link(fn -> config end, name: __MODULE__)
     end
   end
 
-  @spec get_config_file :: ConfigFile
   def get_config_file() do
     Agent.get(__MODULE__, & &1)
   end
@@ -22,7 +23,7 @@ defmodule BugsChannel.Settings.Manager do
     load_from_file(config_filepath())
   end
 
-  def load_from_file(nil), do: :invalid_config_file
+  def load_from_file(nil), do: {:error, :invalid_config_file}
 
   def load_from_file(filepath) when is_binary(filepath) do
     with {:ok, yaml} <- File.read(filepath),

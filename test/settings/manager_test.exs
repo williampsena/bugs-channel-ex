@@ -59,7 +59,7 @@ defmodule BugsChannel.Settings.ManagerTest do
     test "with nil" do
       Application.put_env(:bugs_channel, :config_file, nil)
 
-      assert SettingsManager.start_link([]) == :invalid_config_file
+      assert SettingsManager.start_link([]) == {:error, :invalid_config_file}
     end
   end
 

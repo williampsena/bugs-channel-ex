@@ -26,6 +26,7 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 
 ## TODO
 
+- Adds MongoDB as an alternative for event persistence
 - Generate documentation with ex_doc
 - By project, implement the rate-limit strategy
 - Adds PostgreSQL as an alternative for event persistence
@@ -44,7 +45,6 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Handle Honeybadger events from their SDKs
 - Handle Rollbar events from their SDKs
 - Create a project diagram
-- Adds MongoDB as an alternative for event persistence
 
 # Running project
 

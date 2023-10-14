@@ -28,7 +28,7 @@ defmodule BugsChannel.Plugs.CheckAuthKey do
     conn |> send_unauthorized_resp() |> halt()
   end
 
-  defp do_check_auth_key(conn, auth_key) do
+  defp do_check_auth_key(conn, auth_key) when is_binary(auth_key) do
     service = Fetcher.get_by_auth_key(auth_key)
 
     if is_nil(service) do

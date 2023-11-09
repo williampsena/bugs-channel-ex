@@ -117,3 +117,17 @@ Credo is in charge of maintaining code that follows certain patterns.
 ```shell
 mix credo -a
 ```
+
+# Containers
+
+The file *dev.sh* contains a container setup for running the project locally.
+
+
+# With MongoDB
+# Running migrations
+
+First and foremost, you must start your MongoDB server.
+
+```shell
+DATABASE_MODE=mongo mix mongo.migrate
+```

@@ -27,4 +27,12 @@ config :bugs_channel,
 
 config :bugs_channel, :repos, service: Repo.DBless.Service
 
+config :mongodb_driver,
+  migration: [
+    path: "migrations",
+    otp_app: :bugs_channel,
+    topology: :mongo,
+    collection: "migrations"
+  ]
+
 import_config("#{config_env()}.exs")

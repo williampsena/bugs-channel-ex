@@ -15,7 +15,7 @@ defmodule BugsChannel.Applications.Mongo do
       []
 
       iex> BugsChannel.Applications.Mongo.start("mongo", [ connection_url: "mongodb://localhost:27017/bugs-channel" ])
-      {Mongo, [url: "mongodb://localhost:27017/bugs-channel"]}
+      [{Mongo, [name: :mongo, url: "mongodb://localhost:27017/bugs-channel"]}]
 
       iex> BugsChannel.Applications.Mongo.start("mongo")
       []
@@ -26,7 +26,7 @@ defmodule BugsChannel.Applications.Mongo do
   end
 
   defp do_start("mongo", config) when is_list(config) do
-    {Mongo, [url: config[:connection_url]]}
+    [{Mongo, [name: :mongo, url: config[:connection_url]]}]
   end
 
   defp do_start(_database_mode, _config), do: []

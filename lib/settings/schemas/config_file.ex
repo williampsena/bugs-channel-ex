@@ -45,7 +45,7 @@ defmodule BugsChannel.Settings.Schemas.ConfigFile do
 
   ## Examples
 
-      iex> BugsChannel.Settings.Schemas.ConfigFile.parse(%{ "version" => "1", "org" => "Foo", "services" => [ %{"id" => 1, "name" => "bar", "platform" => "python", "team" => "foo", "settings" => %{ "rate_limit" => 1}, "auth_keys" => [ %{"key" => "key"} ]  } ], "teams" => [ %{"id" => 1, "name" => "Foo"} ]  })
+      iex> BugsChannel.Settings.Schemas.ConfigFile.parse(%{ "version" => "1", "org" => "Foo", "services" => [ %{"id" => 1, "name" => "bar", "platform" => "python", "teams" => [%{ "id" => 1, "name" => "foo" }], "settings" => %{ "rate_limit" => 1}, "auth_keys" => [ %{"key" => "key"} ]  } ], "teams" => [ %{"id" => 1, "name" => "Foo"} ]  })
       {
         :ok,
         %BugsChannel.Settings.Schemas.ConfigFile{
@@ -64,7 +64,7 @@ defmodule BugsChannel.Settings.Schemas.ConfigFile do
                 }
               ],
               settings: %BugsChannel.Repo.Schemas.ServiceSettings{ id: nil, rate_limit: 1},
-              team: "foo"
+              teams: [ %BugsChannel.Repo.Schemas.Team{ id: 1, name: "foo" } ]
             }
           ],
           teams: [

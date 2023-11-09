@@ -38,7 +38,7 @@ defmodule BugsChannel.MixProject do
 
   def extra_applications do
     [
-      extra_applications: [:logger, :hammer]
+      extra_applications: [:logger, :hammer, :poolboy]
     ]
   end
 

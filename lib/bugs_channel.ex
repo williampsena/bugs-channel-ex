@@ -22,7 +22,8 @@ defmodule BugsChannel do
         Applications.Settings.start(database_mode()) ++
         Applications.Sentry.start() ++
         Applications.Gnat.start() ++
-        Applications.Channels.start()
+        Applications.Channels.start() ++
+        Applications.Mongo.start(database_mode())
 
     opts = [strategy: :one_for_one, name: BugsChannel.Supervisor]
 

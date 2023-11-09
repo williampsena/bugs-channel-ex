@@ -26,3 +26,6 @@ bugs_channel-*.tar
 
 .elixir_ls
 erl_crash.dump
+
+# docker files
+.docker/**/*

@@ -7,7 +7,9 @@ services:
   - id: 1
     name: foo bar service
     platform: python
-    team: foo
+    teams:
+      - id: 1
+        name: foo
     settings:
       rate_limit: 1
     auth_keys:

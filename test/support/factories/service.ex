@@ -5,12 +5,16 @@ defmodule BugsChannel.Factories.Service do
 
   use ExMachina
 
+  alias BugsChannel.Factories.Team
+
   def service_factory do
     %BugsChannel.Repo.Schemas.Service{
       id: 1,
       name: "foo bar service",
       platform: "python",
-      team: "foo",
+      teams: [
+        Team.team_factory()
+      ],
       settings: service_settings_factory(),
       auth_keys: [
         service_auth_key_factory(),

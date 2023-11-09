@@ -10,7 +10,7 @@ defmodule BugsChannel.Repo.Schemas.Service do
   schema "service" do
     field(:name, :string)
     field(:platform, :string)
-    field(:team, :string, default: "bugs")
+    embeds_many(:teams, RepoSchemas.Team)
     embeds_one(:settings, RepoSchemas.ServiceSettings)
     embeds_many(:auth_keys, RepoSchemas.ServiceAuthKey)
   end
@@ -20,10 +20,10 @@ defmodule BugsChannel.Repo.Schemas.Service do
 
   ## Examples
 
-      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1, "name" => "bar", "platform" => "python", "team" => "foo", "settings" => %{ "rate_limit" => 1, "auth-keys" => [ %{"key" => "key"}]} }).valid?
+      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1, "name" => "bar", "platform" => "python", "teams" => [ %{  "id" => 1, "name" => "foo" } ], "settings" => %{ "rate_limit" => 1, "auth-keys" => [ %{"key" => "key"}]} }).valid?
       true
 
-      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1, "name" => "ab", "platform" => "python", "team" => "foo", "settings" => %{ "rate_limit" => 1, "auth-keys" => [ %{"key" => "key"}]} }).valid?
+      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1, "name" => "ab", "platform" => "python", "teams" => "foo", "settings" => %{ "rate_limit" => 1, "auth-keys" => [ %{"key" => "key"}]} }).valid?
       false
 
       iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1 }).valid?
@@ -31,10 +31,11 @@ defmodule BugsChannel.Repo.Schemas.Service do
   """
   def changeset(%__MODULE__{} = service, params) do
     service
-    |> cast(params, ~w(id name platform team)a)
+    |> cast(params, ~w(id name platform)a)
     |> cast_embed(:settings)
     |> cast_embed(:auth_keys)
-    |> validate_required(~w(name platform team)a)
+    |> cast_embed(:teams, require: true)
+    |> validate_required(~w(name platform)a)
     |> validate_length(:name, min: 3)
   end
 end

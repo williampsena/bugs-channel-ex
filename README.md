@@ -23,6 +23,7 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - In db-less mode, define yaml as an option
 - Identify the project by the requested authentication keys
 - Adds cache strategies
+- Adds Mongo persistence and tasks to import yaml files
 
 ## TODO
 

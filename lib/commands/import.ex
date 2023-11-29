@@ -7,6 +7,7 @@ defmodule BugsChannel.Commands.Import do
 
   alias BugsChannel.Settings.Manager, as: SettingsManager
   alias BugsChannel.Settings.Schemas.ConfigFile
+  alias BugsChannel.Utils.Maps
 
   def run(args) do
     dump_file = List.first(args)
@@ -65,7 +66,7 @@ defmodule BugsChannel.Commands.Import do
 
   defp build_map(schema) do
     schema
-    |> Map.from_struct()
     |> Map.drop(~w(__meta__ id)a)
+    |> Maps.map_from_struct()
   end
 end

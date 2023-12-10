@@ -9,6 +9,8 @@ defmodule BugsChannel.Router do
 
   if development?(), do: use(Plug.Debugger)
 
+  plug(Corsica, origins: "*")
+
   plug(:match)
 
   plug(Plug.Parsers, parsers: [:urlencoded, :multipart])

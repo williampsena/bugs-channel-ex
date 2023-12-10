@@ -29,6 +29,11 @@ defmodule BugsChannel.Plugins.Sentry.Utils.EnvelopeParser do
     end
   end
 
+  @impl true
+  def parse(conn, "text", "plain", headers, opts) do
+    parse(conn, "application", "x-sentry-envelope", headers, opts)
+  end
+
   def parse(conn, _type, _subtype, _headers, _opts) do
     {:next, conn}
   end

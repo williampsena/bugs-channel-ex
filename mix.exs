@@ -56,6 +56,7 @@ defmodule BugsChannel.MixProject do
       {:shards, "~> 1.1"},
       {:decorator, "~> 1.4"},
       {:telemetry, "~> 1.0"},
+      {:corsica, "~> 2.0"},
       {:mongodb_driver, "~> 1.2.0", optional: true},
 
       # development deps

@@ -115,7 +115,7 @@ defmodule BugsChannel.Plugins.Sentry.Utils.EnvelopeParserTest do
     test "when content is unsupported" do
       conn = conn(:post, "/", "")
 
-      assert SentryEnvelopeParser.parse(conn, "text", "plain", [], []) ==
+      assert SentryEnvelopeParser.parse(conn, "text", "xml", [], []) ==
                {:next, conn}
     end
 
@@ -330,6 +330,21 @@ defmodule BugsChannel.Plugins.Sentry.Utils.EnvelopeParserTest do
 
       {:ok, decoded_body, _} =
         SentryEnvelopeParser.parse(conn, "application", "x-sentry-envelope", [], [])
+
+      assert decoded_body == event_response
+    end
+
+    test "when content is text/plain", %{
+      event_binary: event_binary,
+      event_response: event_response
+    } do
+      conn =
+        :post
+        |> conn("/1", event_binary)
+        |> put_resp_content_type("text/plain")
+
+      {:ok, decoded_body, _} =
+        SentryEnvelopeParser.parse(conn, "text", "plain", [], [])
 
       assert decoded_body == event_response
     end

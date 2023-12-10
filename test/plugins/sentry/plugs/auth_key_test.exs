@@ -24,6 +24,16 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.AuthKeyTest do
     assert conn.assigns[:auth_key] == "foo-bar"
   end
 
+  test "when header sentry-key is present" do
+    conn =
+      :get
+      |> conn("/?sentry_key=foo-bar", "")
+      |> SentryAuthKeyPlug.call([])
+
+    refute conn.halted
+    assert conn.assigns[:auth_key] == "foo-bar"
+  end
+
   test "when header x-sentry-auth is not present" do
     conn =
       :get

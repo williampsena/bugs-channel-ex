@@ -12,6 +12,8 @@ defmodule BugsChannel.Plugins.Sentry.Router do
 
   require Logger
 
+  plug(Corsica, origins: "*")
+
   if development?(), do: plug(Plug.Logger, log: :debug)
 
   plug(:match)

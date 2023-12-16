@@ -7,7 +7,7 @@ defmodule BugsChannel.Factories.Team do
 
   def team_factory do
     %BugsChannel.Repo.Schemas.Team{
-      id: 1,
+      id: "1",
       name: "foo"
     }
   end

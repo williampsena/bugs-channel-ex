@@ -5,22 +5,20 @@ defmodule BugsChannel.Repo.Schemas.ServiceSettings do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "service_settings" do
+  @primary_key false
+  embedded_schema do
     field(:rate_limit, :integer, default: 0)
   end
 
   @doc ~S"""
-  Parses map to service schema
+  Parses map to service settings schema
 
   ## Examples
 
-      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1, "name" => "bar", "platform" => "python", "team" => "foo", "settings" => %{ "rate_limit" => 1 }, "auth_keys" => [ %{"key" => "key"} ] }).valid?
+      iex> BugsChannel.Repo.Schemas.ServiceSettings.changeset(%BugsChannel.Repo.Schemas.ServiceSettings{}, %{ "rate_limit" => 1 }).valid?
       true
 
-      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1, "name" => "ab", "platform" => "python", "team" => "foo", "settings" => %{ "rate_limit" => 1 }, "auth_keys" => [ %{"key" => "key"} ] }).valid?
-      false
-
-      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1 }).valid?
+      iex> BugsChannel.Repo.Schemas.ServiceSettings.changeset(%BugsChannel.Repo.Schemas.ServiceSettings{}, %{ "rate_limit" => -1 }).valid?
       false
   """
   def changeset(%__MODULE__{} = service, params) do

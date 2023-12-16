@@ -9,7 +9,7 @@ defmodule BugsChannel.Factories.Service do
 
   def service_factory do
     %BugsChannel.Repo.Schemas.Service{
-      id: 1,
+      id: "1",
       name: "foo bar service",
       platform: "python",
       teams: [
@@ -26,7 +26,6 @@ defmodule BugsChannel.Factories.Service do
 
   def service_settings_factory do
     %BugsChannel.Repo.Schemas.ServiceSettings{
-      id: nil,
       rate_limit: 1
     }
   end
@@ -43,7 +42,7 @@ defmodule BugsChannel.Factories.Service do
     %BugsChannel.Repo.Schemas.ServiceAuthKey{
       key: "expired_key",
       disabled: false,
-      expired_at: ~D[2000-01-01]
+      expired_at: DateTime.to_unix(~U[2000-01-01 00:00:00.000000Z])
     }
   end
 

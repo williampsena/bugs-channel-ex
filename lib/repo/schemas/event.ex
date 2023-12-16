@@ -35,7 +35,7 @@ defmodule BugsChannel.Repo.Schemas.Event do
       iex> BugsChannel.Repo.Schemas.Event.changeset(%BugsChannel.Repo.Schemas.Event{}, %{ "id" => "abc123", "origin" => "home", "title" => "some error", "body" => "error", "service_id" => 1, "platform" => "elixir", "release" => "git-hash", "server_name" => "foo", "kind" => "error", "environment" => "production", "stack_trace" => [], "tags" => [] }).valid?
       true
 
-      iex> BugsChannel.Repo.Schemas.Event.changeset(%BugsChannel.Repo.Schemas.Event{}, %{"id" => 1 }).valid?
+      iex> BugsChannel.Repo.Schemas.Event.changeset(%BugsChannel.Repo.Schemas.Event{}, %{"id" => "1" }).valid?
       false
   """
   def changeset(%__MODULE__{} = event, params) do

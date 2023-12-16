@@ -15,14 +15,15 @@ defmodule BugsChannel.Utils.ConnectionParamsBuilder do
         host: "localhost",
         password: "password",
         username: "user",
-        auth_required: true
+        auth_required: true,
+        path: ""
       }}
 
       iex> BugsChannel.Utils.ConnectionParamsBuilder.from_url("redis://localhost:5432")
-      {"redis", %{port: 5432, host: "localhost" }}
+      {"redis", %{port: 5432, host: "localhost", path: "" }}
 
       iex> BugsChannel.Utils.ConnectionParamsBuilder.from_url("amqp://user:pass@host:5672/vhost?heartbeat=60&wrong=true", heartbeat: :number)
-      {"amqp", %{port: 5672, host: "host", password: "pass", username: "user", heartbeat: 1}}
+      {"amqp", %{port: 5672, host: "host", password: "pass", username: "user", heartbeat: 1, path: "vhost"}}
 
       iex> BugsChannel.Utils.ConnectionParamsBuilder.from_url("sql://user:pass@host:8000/?number=1&boolean=true&boolean_num=1", number: :number, boolean: :boolean, boolean_num: :boolean)
       {"sql",
@@ -33,11 +34,12 @@ defmodule BugsChannel.Utils.ConnectionParamsBuilder do
         number: 1,
         password: "pass",
         username: "user",
-        boolean_num: false
+        boolean_num: false,
+        path: ""
       }}
 
       iex> BugsChannel.Utils.ConnectionParamsBuilder.from_url("fake://foo:80?bar=yes", bar: :any)
-      {"fake", %{port: 80, host: "foo", bar: "yes" }}
+      {"fake", %{port: 80, host: "foo", bar: "yes", path: "" }}
   """
   def from_url(url, config_schema \\ []) when is_binary(url) and is_list(config_schema) do
     uri = URI.parse(url)
@@ -47,7 +49,8 @@ defmodule BugsChannel.Utils.ConnectionParamsBuilder do
     connection_config =
       %{
         host: uri.host,
-        port: uri.port
+        port: uri.port,
+        path: String.slice(uri.path || "", 1..-1)
       }
       |> build_credentials(uri)
       |> build_query_params(config_schema, uri)
@@ -82,14 +85,9 @@ defmodule BugsChannel.Utils.ConnectionParamsBuilder do
 
   defp parse_value(value, type) do
     case type do
-      :boolean ->
-        value == "true" || value == 1
-
-      :number ->
-        String.to_integer("1")
-
-      _ ->
-        value
+      :boolean -> value == "true" || value == 1
+      :number -> 1
+      _ -> value
     end
   end
 end

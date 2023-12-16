@@ -68,7 +68,7 @@ defmodule BugsChannel.MixProject do
       {:excoveralls, "~> 0.17.1", only: :test},
       {:mock, "~> 0.3.0", only: :test},
       {:hammox, "~> 0.7", only: :test},
-      {:ex_machina, "~> 2.7.0", only: :test},
+      {:ex_machina, "~> 2.7.0", only: :test}
     ]
   end
 
@@ -76,6 +76,9 @@ defmodule BugsChannel.MixProject do
   defp elixirc_paths(_), do: ["lib"]
 
   defp aliases do
-    [api: ["run --no-halt "]]
+    [
+      test: ["database_cleanup", "test"],
+      api: ["run --no-halt "]
+    ]
   end
 end

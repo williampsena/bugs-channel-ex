@@ -18,12 +18,12 @@ defmodule BugsChannel.Repo.DBLess.ServiceTest do
   describe "get/1" do
     @tag :starts_with_mocks
     test "when a service is found", %{service: service} do
-      assert Repo.Service.get(1) == service
+      assert Repo.Service.get("1") == service
     end
 
     @tag :starts_with_mocks
     test "when a service is not found" do
-      assert Repo.Service.get(2) == nil
+      assert Repo.Service.get("2") == nil
     end
   end
 

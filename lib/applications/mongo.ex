@@ -17,7 +17,7 @@ defmodule BugsChannel.Applications.Mongo do
       iex> BugsChannel.Applications.Mongo.start("mongo", [ connection_url: "mongodb://localhost:27017/bugs-channel" ])
       [{Mongo, [name: :mongo, url: "mongodb://localhost:27017/bugs-channel"]}]
 
-      iex> BugsChannel.Applications.Mongo.start("mongo")
+      iex> BugsChannel.Applications.Mongo.start("kongo")
       []
   """
   def start(database_mode, config \\ nil) when is_binary(database_mode) do

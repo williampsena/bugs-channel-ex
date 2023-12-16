@@ -14,7 +14,7 @@ defmodule BugsChannel.Applications.Gnat do
   ## Examples
 
       iex> BugsChannel.Applications.Gnat.start([ enabled: true, connections_url: ["gnat://localhost:4222?auth_required=false"] ])
-      [{Gnat.ConnectionSupervisor, %{name: :gnat, connection_settings: [%{port: 4222, host: "localhost", auth_required: false}], backoff_period: 4000}}, %{id: :"raw-event.*", start: {Gnat.ConsumerSupervisor, :start_link, [%{module: BugsChannel.Channels.Gnat.RawEventConsumer, shutdown: 30000, connection_name: :gnat, subscription_topics: [%{topic: "raw-event.*", queue_group: "RawEvents"}]}]}}, %{id: :"event.*", start: {Gnat.ConsumerSupervisor, :start_link, [%{module: BugsChannel.Channels.Gnat.EventConsumer, shutdown: 30000, connection_name: :gnat, subscription_topics: [%{topic: "event.*", queue_group: "Events"}]}]}}]
+      [{Gnat.ConnectionSupervisor, %{name: :gnat, connection_settings: [%{port: 4222, host: "localhost", auth_required: false, path: ""}], backoff_period: 4000}}, %{id: :"raw-event.*", start: {Gnat.ConsumerSupervisor, :start_link, [%{module: BugsChannel.Channels.Gnat.RawEventConsumer, shutdown: 30000, connection_name: :gnat, subscription_topics: [%{topic: "raw-event.*", queue_group: "RawEvents"}]}]}}, %{id: :"event.*", start: {Gnat.ConsumerSupervisor, :start_link, [%{module: BugsChannel.Channels.Gnat.EventConsumer, shutdown: 30000, connection_name: :gnat, subscription_topics: [%{topic: "event.*", queue_group: "Events"}]}]}}]
   """
   def start(config \\ nil) do
     config = config || gnat_config()

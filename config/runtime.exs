@@ -4,7 +4,9 @@
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
 import Config
-import BugsChannel.ConfigBuilder
+import BugsChannel.Utils.ConfigBuilder
+
+alias BugsChannel.Repo
 
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
@@ -23,6 +25,7 @@ if System.get_env("MIX_ENV") == "prod" do
     config_file: System.get_env("CONFIG_FILE")
 end
 
+database_mode = System.get_env("DATABASE_MODE")
 channel_mode = System.get_env("CHANNEL_MODE")
 gnat_connections_url = System.get_env("GNATS_CONNECTIONS", "") |> String.split(~c"|")
 
@@ -30,6 +33,10 @@ if channel_mode == "nats" do
   config :bugs_channel, :gnat,
     enabled: true,
     connections_url: gnat_connections_url
+end
+
+if database_mode == "mongo" do
+  config :bugs_channel, :repos, service: Repo.Service
 end
 
 config :bugs_channel, :scrubber,

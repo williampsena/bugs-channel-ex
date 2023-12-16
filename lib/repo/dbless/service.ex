@@ -18,7 +18,7 @@ defmodule BugsChannel.Repo.DBless.Service do
         key.key == auth_key &&
           key.disabled == false &&
           (is_nil(key.expired_at) ||
-             Date.compare(key.expired_at, DateTime.utc_now()) == :gt)
+             :os.system_time(:seconds) < key.expired_at)
       end)
     end)
   end

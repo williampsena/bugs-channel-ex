@@ -7,6 +7,8 @@ defmodule BugsChannel.Repo.Schemas.Service do
 
   alias BugsChannel.Repo.Schemas, as: RepoSchemas
 
+  @primary_key {:id, :string, autogenerate: false}
+
   schema "service" do
     field(:name, :string)
     field(:platform, :string)
@@ -20,13 +22,13 @@ defmodule BugsChannel.Repo.Schemas.Service do
 
   ## Examples
 
-      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1, "name" => "bar", "platform" => "python", "teams" => [ %{  "id" => 1, "name" => "foo" } ], "settings" => %{ "rate_limit" => 1, "auth-keys" => [ %{"key" => "key"}]} }).valid?
+      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => "1", "name" => "bar", "platform" => "python", "teams" => [ %{  "id" => "1", "name" => "foo" } ], "settings" => %{ "rate_limit" => 1, "auth_keys" => [ %{"key" => "key"}]} }).valid?
       true
 
-      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1, "name" => "ab", "platform" => "python", "teams" => "foo", "settings" => %{ "rate_limit" => 1, "auth-keys" => [ %{"key" => "key"}]} }).valid?
+      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => "1", "name" => "ab", "platform" => "python", "teams" => "foo", "settings" => %{ "rate_limit" => 1, "auth_keys" => [ %{"key" => "key"}]} }).valid?
       false
 
-      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => 1 }).valid?
+      iex> BugsChannel.Repo.Schemas.Service.changeset(%BugsChannel.Repo.Schemas.Service{}, %{"id" => "1" }).valid?
       false
   """
   def changeset(%__MODULE__{} = service, params) do

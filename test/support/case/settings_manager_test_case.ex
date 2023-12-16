@@ -41,7 +41,7 @@ defmodule BugsChannel.Case.SettingsManagerTestCase do
 
       def reset_settings_manager_on_exit!(context) do
         on_exit(fn ->
-          Application.put_env(:bugs_channel, :database_mode, "postgres")
+          Application.put_env(:bugs_channel, :database_mode, "mongo")
           Application.put_env(:bugs_channel, :conf_file, nil)
         end)
 

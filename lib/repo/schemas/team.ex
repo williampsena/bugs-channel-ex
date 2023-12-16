@@ -5,6 +5,8 @@ defmodule BugsChannel.Repo.Schemas.Team do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :string, autogenerate: false}
+
   schema "team" do
     field(:name, :string)
   end
@@ -14,7 +16,7 @@ defmodule BugsChannel.Repo.Schemas.Team do
 
   ## Examples
 
-      iex> BugsChannel.Repo.Schemas.Team.changeset(%BugsChannel.Repo.Schemas.Team{}, %{"id" => 1, "name" => "foo" }).valid?
+      iex> BugsChannel.Repo.Schemas.Team.changeset(%BugsChannel.Repo.Schemas.Team{}, %{"id" => "1", "name" => "foo" }).valid?
       true
 
       iex> BugsChannel.Repo.Schemas.Team.changeset(%BugsChannel.Repo.Schemas.Team{}, %{ "id" => "foo" }).valid?

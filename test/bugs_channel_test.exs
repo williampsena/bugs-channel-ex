@@ -12,7 +12,7 @@ defmodule BugsChannelTest do
     gnat_config = Application.get_env(:bugs_channel, :gnat)
 
     on_exit(fn ->
-      Application.put_env(:bugs_channel, :database_mode, "postgres")
+      Application.put_env(:bugs_channel, :database_mode, "mongo")
       Application.put_env(:bugs_channel, :conf_file, nil)
       Application.put_env(:bugs_channel, :sentry, sentry_config)
       Application.put_env(:bugs_channel, :gnat, gnat_config)

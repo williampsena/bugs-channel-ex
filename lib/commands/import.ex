@@ -66,7 +66,7 @@ defmodule BugsChannel.Commands.Import do
 
   defp build_map(schema) do
     schema
-    |> Map.drop(~w(__meta__ id)a)
+    |> Map.delete(:id)
     |> Maps.map_from_struct()
   end
 end

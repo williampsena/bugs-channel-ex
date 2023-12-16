@@ -5,10 +5,11 @@ defmodule BugsChannel.Repo.Schemas.ServiceAuthKey do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "service_auth_keys" do
+  @primary_key false
+  embedded_schema do
     field(:key, :string, default: "")
     field(:disabled, :boolean, default: false)
-    field(:expired_at, :date, default: nil)
+    field(:expired_at, :integer, default: nil)
   end
 
   @doc ~S"""
@@ -16,7 +17,7 @@ defmodule BugsChannel.Repo.Schemas.ServiceAuthKey do
 
   ## Examples
 
-      iex> BugsChannel.Repo.Schemas.ServiceAuthKey.changeset(%BugsChannel.Repo.Schemas.ServiceAuthKey{}, %{ "key" => "key", "disabled" => true, "expired_at" => nil }).valid?
+      iex> BugsChannel.Repo.Schemas.ServiceAuthKey.changeset(%BugsChannel.Repo.Schemas.ServiceAuthKey{}, %{ "key" => "key", "disabled" => true, "expired_at" => 1702552087 }).valid?
       true
 
       iex> BugsChannel.Repo.Schemas.ServiceAuthKey.changeset(%BugsChannel.Repo.Schemas.ServiceAuthKey{}, %{ "key" => nil, "disabled" => true, "expired_at" => nil }).valid?

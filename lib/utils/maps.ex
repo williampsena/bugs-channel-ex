@@ -21,33 +21,32 @@ defmodule BugsChannel.Utils.Maps do
   end
 
   @doc ~S"""
-  Safely parse a map string to map atoms.
+  Safely parse a struct to map atoms.
 
   ## Examples
 
     iex> service = %BugsChannel.Repo.Schemas.Service{
-    ...>   id: 1,
+    ...>   id: "1",
     ...>   name: "bar",
     ...>   platform: "python",
     ...>   auth_keys: [
     ...>     %BugsChannel.Repo.Schemas.ServiceAuthKey{
-    ...>       id: nil,
     ...>       key: "key",
     ...>       disabled: false,
     ...>       expired_at: nil
     ...>     }
     ...>   ],
-    ...>   settings: %BugsChannel.Repo.Schemas.ServiceSettings{ id: nil, rate_limit: 1},
-    ...>   teams: [ %BugsChannel.Repo.Schemas.Team{ id: 1, name: "foo" } ]
+    ...>   settings: %BugsChannel.Repo.Schemas.ServiceSettings{ rate_limit: 1 },
+    ...>   teams: [ %BugsChannel.Repo.Schemas.Team{ id: "1", name: "foo" } ]
     ...> }
     ...> BugsChannel.Utils.Maps.map_from_struct(service)
     %{
-      auth_keys: [%{disabled: false, id: nil, key: "key", expired_at: nil}],
-      id: 1,
+      auth_keys: [%{disabled: false, key: "key", expired_at: nil}],
+      id: "1",
       name: "bar",
       platform: "python",
-      settings: %{id: nil, rate_limit: 1},
-      teams: [%{id: 1, name: "foo"}]
+      settings: %{ rate_limit: 1 },
+      teams: [%{id: "1", name: "foo"}]
     }
 
     iex> BugsChannel.Utils.Maps.map_from_struct(%{})
@@ -71,4 +70,5 @@ defmodule BugsChannel.Utils.Maps do
   end
 
   defp parse_struct(value), do: value
+
 end

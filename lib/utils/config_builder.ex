@@ -1,4 +1,4 @@
-defmodule BugsChannel.ConfigBuilder do
+defmodule BugsChannel.Utils.ConfigBuilder do
   @moduledoc """
   This module includes functions for setup environments.
   """
@@ -9,6 +9,9 @@ defmodule BugsChannel.ConfigBuilder do
   ## Examples
 
       iex> BugsChannel.Utils.ConfigBuilder.list_from_env("FOO", "foo|bar")
+      ["foo", "bar"]
+
+      iex> BugsChannel.Utils.ConfigBuilder.list_from_env("FOO", "foo,bar", ",")
       ["foo", "bar"]
 
   """

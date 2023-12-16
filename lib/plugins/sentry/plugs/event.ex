@@ -4,7 +4,10 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.Event do
   """
 
   require Logger
+
   import BugsChannel.Plugs.Api
+  import Plug.Conn
+
   alias BugsChannel.Events.RawEvent
 
   def init(options) do
@@ -16,14 +19,18 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.Event do
   end
 
   defp action(%Plug.Conn{params: %{"event_id" => event_id}} = conn, "POST") do
-    case RawEvent.publish(event_id, "sentry", conn.params) do
-      :ok ->
-        send_json_resp(conn, %{"event_id" => event_id})
+    if is_nil(event_id) do
+      send_resp(conn, 204, "")
+    else
+      case RawEvent.publish(event_id, "sentry", conn.params) do
+        :ok ->
+          send_json_resp(conn, %{"event_id" => event_id})
 
-      error ->
-        Logger.error("An error occurred while attempting to send raw events: #{inspect(error)}")
+        error ->
+          Logger.error("An error occurred while attempting to send raw events: #{inspect(error)}")
 
-        send_unknown_error_resp(conn)
+          send_unknown_error_resp(conn)
+      end
     end
   end
 

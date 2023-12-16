@@ -71,6 +71,20 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.EventTest do
       assert_conn(conn, 200, Jason.encode!(%{"event_id" => event_id}))
     end
 
+    test "when skip a event", %{event: event} do
+      event = Map.put(event, "event_id", nil)
+      event_json = Jason.encode!(event)
+
+      conn =
+        :post
+        |> conn("/api/1/envelope", event_json)
+        |> put_resp_content_type("application/x-sentry-envelope")
+        |> put_params(event)
+        |> SentryEventPlug.call([])
+
+      assert_conn(conn, 204, "")
+    end
+
     test "when payload event is invalid" do
       conn =
         :post

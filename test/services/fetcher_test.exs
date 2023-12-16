@@ -17,7 +17,7 @@ defmodule BugsChannel.Services.FetcherTest do
         ],
         teams: [
           %BugsChannel.Repo.Schemas.Team{
-            id: 1,
+            id: "1",
             name: "foo"
           }
         ],
@@ -29,11 +29,11 @@ defmodule BugsChannel.Services.FetcherTest do
 
   describe "get/1" do
     test "with valid service", %{service: service} do
-      assert ServicesFetcher.get(1) == service
+      assert ServicesFetcher.get("1") == service
     end
 
     test "with invalid service" do
-      assert ServicesFetcher.get(99) == nil
+      assert ServicesFetcher.get("99") == nil
     end
   end
 

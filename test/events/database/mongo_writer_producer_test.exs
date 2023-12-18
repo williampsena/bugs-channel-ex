@@ -1,0 +1,75 @@
+defmodule BugsChannel.Events.Database.MongoWriterProducerTest do
+  use ExUnit.Case
+
+  import Mock
+  import ExUnit.CaptureLog
+  import BugsChannel.Test.Support.FixtureHelper
+  import BugsChannel.Factories.Event
+
+  alias BugsChannel.Repo
+  alias BugsChannel.Events.Database.MongoWriterProducer
+
+  describe "start_link/1" do
+    test "with default options" do
+      assert match?({:ok, _}, MongoWriterProducer.start_link([]))
+    end
+  end
+
+  describe "init/1" do
+    test "with default options" do
+      assert MongoWriterProducer.init([]) == {:ok, [done: 0, errors: 0, ignored: 0]}
+    end
+  end
+
+  test "terminate/2" do
+    assert capture_log(fn ->
+             assert MongoWriterProducer.terminate(nil, nil)
+           end) =~ "The mongo writer producer has been terminated...."
+  end
+
+  describe "enqueue/2" do
+    test "with default options" do
+      assert MongoWriterProducer.enqueue(:sentry, %{"foo" => "bar"}) == :ok
+    end
+  end
+
+  describe "handle_cast/2" do
+    setup do
+      event = build(:event)
+      sentry_event = load_json_fixture("sentry/event.json")
+      event_id = event.id
+      default_state = [done: 0, errors: 0, ignored: 0]
+
+      [
+        default_state: default_state,
+        event: event,
+        sentry_event: sentry_event,
+        event_id: event_id
+      ]
+    end
+
+    test "with valid event", %{default_state: default_state, event: event} do
+      assert MongoWriterProducer.handle_cast({:home, event}, default_state) == {
+               :noreply,
+               [done: 1, errors: 0, ignored: 0]
+             }
+    end
+
+    test "when an issue occurred while attempting to push an event", %{
+      default_state: default_state,
+      event: event
+    } do
+      with_mock(Repo.Event, [], insert: fn _event -> {:error, "invalid connection"} end) do
+        assert MongoWriterProducer.handle_cast({:home, event}, default_state) ==
+                 {:noreply, [errors: 1, done: 0, ignored: 0]}
+
+        assert_called(Repo.Event.insert(event))
+      end
+    end
+
+    test "when an event is ignored", %{default_state: default_state} do
+      assert MongoWriterProducer.handle_cast({:home, :fake_event}, default_state) ==
+               {:noreply, [ignored: 1, done: 0, errors: 0]}
+    end
+  end
+end

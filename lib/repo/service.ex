@@ -2,23 +2,28 @@ defmodule BugsChannel.Repo.Service do
   @moduledoc """
   This module contains the database mode service repository.
   """
+  @behaviour BugsChannel.Repo.Behaviours.Service
+
+  import BugsChannel.Repo.Base
   import BugsChannel.Repo.Parsers.Service
 
   alias BugsChannel.Repo.Schemas, as: RepoSchemas
 
   @collection "services"
 
-  @spec get(String.t()) :: RepoSchemas.Service
   def get(id) do
-    :mongo
-    |> Mongo.find_one(@collection, %{_id: BSON.ObjectId.decode!(id)})
+    @collection
+    |> get_by_id(id)
     |> parse(%RepoSchemas.Service{})
   end
 
-  @spec get_by_auth_key(String.t()) :: RepoSchemas.Service
   def get_by_auth_key(auth_key) do
-    :mongo
-    |> Mongo.find_one(@collection, %{"auth_keys.key": auth_key})
+    @collection
+    |> find_one(%{"auth_keys.key" => auth_key})
     |> parse(%RepoSchemas.Service{})
+  end
+
+  def insert(%RepoSchemas.Service{} = service) do
+    insert(@collection, service)
   end
 end

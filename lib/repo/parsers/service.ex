@@ -3,8 +3,10 @@ defmodule BugsChannel.Repo.Parsers.Service do
   This module includes database document parsers or mappers for the Service entity.
   """
 
-  alias BugsChannel.Utils.Ecto, as: EctoUtils
+  use BugsChannel.Repo.Parsers.Base
 
+  alias BugsChannel.Utils.Maps
+  alias BugsChannel.Utils.Ecto, as: EctoUtils
   alias BugsChannel.Repo.Schemas, as: RepoSchemas
 
   @doc ~S"""
@@ -84,5 +86,27 @@ defmodule BugsChannel.Repo.Parsers.Service do
         default_value
       )
     end)
+  end
+
+  @doc ~S"""
+  Parse a document list to schemas.
+
+  ## Examples
+      iex> doc = %{
+      ...>   "auth_keys" => [],
+      ...>   "id" => "1",
+      ...>   "name" => "bar",
+      ...>   "platform" => "python",
+      ...>   "settings" => %{"rate_limit" => 1},
+      ...>   "teams" => [%{"id" => "1", "name" => "foo"}]
+      ...> }
+      ...> BugsChannel.Repo.Parsers.Service.parse_list([doc], %BugsChannel.Repo.Schemas.Service{})
+      [%BugsChannel.Repo.Schemas.Service{id: "", name: "bar", platform: "python", teams: [%BugsChannel.Repo.Schemas.Team{id: "1", name: "foo"}], settings: %BugsChannel.Repo.Schemas.ServiceSettings{rate_limit: 1}, auth_keys: []}]
+  """
+  def parse_list(docs, schema) when is_list(docs) and is_struct(schema),
+    do: parse_list(docs, schema, [])
+
+  def parse_list(docs, schema, default_value) when is_list(docs) and is_struct(schema) do
+    Enum.map(docs, fn doc -> __MODULE__.parse(doc, schema, default_value) end)
   end
 end

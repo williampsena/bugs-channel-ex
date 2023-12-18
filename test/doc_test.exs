@@ -12,5 +12,7 @@ defmodule BugsChannel.DocTest do
   doctest BugsChannel.Applications.Sentry
   doctest BugsChannel.Applications.Settings
 
+  doctest BugsChannel.Repo.Parsers.Base
   doctest BugsChannel.Repo.Parsers.Service
+  doctest BugsChannel.Repo.Parsers.Event
 end

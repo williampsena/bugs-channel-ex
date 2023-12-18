@@ -5,21 +5,16 @@ defmodule BugsChannel.Repo.ServiceTest do
   import Mox
 
   alias BugsChannel.Repo, as: Repo
-  alias BugsChannel.Utils.Maps
 
   setup :verify_on_exit!
 
   setup do
     service = build(:service)
 
-    {:ok, %{inserted_id: inserted_id}} =
-      Mongo.insert_one(
-        :mongo,
-        "services",
-        build_map(service)
-      )
+    {:ok, inserted_service} =
+      Repo.Service.insert(service)
 
-    [service: service, service_id: "#{inserted_id}"]
+    [service: service, service_id: "#{inserted_service.id}"]
   end
 
   describe "get/1" do
@@ -49,7 +44,7 @@ defmodule BugsChannel.Repo.ServiceTest do
                  ],
                  name: "foo bar service",
                  platform: "python",
-                 settings: %BugsChannel.Repo.Schemas.ServiceSettings{ rate_limit: 1 },
+                 settings: %BugsChannel.Repo.Schemas.ServiceSettings{rate_limit: 1},
                  teams: [
                    %BugsChannel.Repo.Schemas.Team{
                      name: "foo"
@@ -88,7 +83,7 @@ defmodule BugsChannel.Repo.ServiceTest do
                  ],
                  name: "foo bar service",
                  platform: "python",
-                 settings: %BugsChannel.Repo.Schemas.ServiceSettings{ rate_limit: 1 },
+                 settings: %BugsChannel.Repo.Schemas.ServiceSettings{rate_limit: 1},
                  teams: [
                    %BugsChannel.Repo.Schemas.Team{
                      name: "foo"
@@ -100,9 +95,12 @@ defmodule BugsChannel.Repo.ServiceTest do
     end
   end
 
-  defp build_map(schema) do
-    schema
-    |> Map.delete(:id)
-    |> Maps.map_from_struct()
+  describe "insert/1" do
+    test "when a service is valid" do
+      service = build(:service)
+      assert {:ok, inserted_service} = Repo.Service.insert(service)
+      assert match?(%BugsChannel.Repo.Schemas.Service{}, inserted_service)
+      refute is_nil(inserted_service.id)
+    end
   end
 end

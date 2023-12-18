@@ -49,7 +49,7 @@ defmodule BugsChannel.Channels.Gnat.ConsumerTest do
       Enum.each(@consumers, fn consumer ->
         assert capture_log(fn ->
                  assert consumer.request(gnat_message_wrong) == :ok
-               end) =~ "An error occurred while attempting to decode an event."
+               end) =~ "❌ An error occurred while attempting to decode an event."
       end)
     end
   end
@@ -62,7 +62,7 @@ defmodule BugsChannel.Channels.Gnat.ConsumerTest do
         assert capture_log(fn ->
                  assert consumer.error(%{gnat: nil, reply_to: nil}, error) == :ok
                end) =~
-                 "An error occurred while attempting to consuming an event. #{inspect(error)}"
+                 "❌ An error occurred while attempting to consuming an event. #{inspect(error)}"
       end)
     end
   end

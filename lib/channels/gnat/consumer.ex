@@ -14,7 +14,7 @@ defmodule BugsChannel.Channels.Gnat.Consumer do
 
       def error(%{gnat: _gnat, reply_to: _reply_to}, error) do
         Logger.error(
-          "An error occurred while attempting to consuming an event. #{inspect(error)}"
+          "❌ An error occurred while attempting to consuming an event. #{inspect(error)}"
         )
       end
 
@@ -25,7 +25,7 @@ defmodule BugsChannel.Channels.Gnat.Consumer do
 
           error ->
             Logger.error(
-              "An error occurred while attempting to decode an event. #{inspect(error)}"
+              "❌ An error occurred while attempting to decode an event. #{inspect(error)}"
             )
         end
 

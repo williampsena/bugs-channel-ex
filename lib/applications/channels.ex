@@ -11,13 +11,14 @@ defmodule BugsChannel.Applications.Channels do
   ## Examples
 
       iex> BugsChannel.Applications.Channels.start()
-      [ {BugsChannel.Events.Producer, []} ]
+      [ {BugsChannel.Events.Producer, []}, {BugsChannel.Events.Database.MongoWriterProducer, []} ]
   """
   def start() do
     Logger.info("⚙️ Starting GenStages...")
 
     [
-      {BugsChannel.Events.Producer, []}
+      {BugsChannel.Events.Producer, []},
+      {BugsChannel.Events.Database.MongoWriterProducer, []}
     ]
   end
 end

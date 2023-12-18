@@ -24,12 +24,22 @@ defmodule BugsChannel.Events.Database.MongoWriterProducer do
   end
 
   @impl true
-  def handle_cast({_origin, event}, state) do
+  def handle_cast({_origin, map_event}, state) do
+    event = parse_event(map_event)
+
+
     case write_event(event) do
       :ok -> {:noreply, Keyword.put(state, :done, state[:done] + 1)}
       :ignored -> {:noreply, Keyword.put(state, :ignored, state[:ignored] + 1)}
-      _ -> {:noreply, Keyword.put(state, :errors, state[:errors] + 1)}
+      _ -> {:noreply, state_error(state)}
     end
+  rescue
+    e ->
+      Logger.error(
+        "❌ An unexpected error occurred while attempting to write events to MongoDB.#{inspect(e)}"
+      )
+
+      {:noreply, state_error(state)}
   end
 
   def enqueue(origin, event) do
@@ -37,14 +47,25 @@ defmodule BugsChannel.Events.Database.MongoWriterProducer do
     GenServer.cast(__MODULE__, {origin, event})
   end
 
+  defp parse_event(map_event) do
+    case RepoSchemas.Event.parse(map_event) do
+      {:ok, event} -> event
+      _ -> :invalid_event
+    end
+  end
+
+  defp state_error(state),
+    do: Keyword.put(state, :errors, state[:errors] + 1)
+
   defp write_event(%RepoSchemas.Event{} = event) do
     case Repo.Event.insert(event) do
       {:ok, _} ->
+        Logger.debug("🔥 The event(#{event.id}) was successfully created.")
         :ok
 
       error ->
         Logger.error(
-          "An error occurred while attempting to save an event on database. #{inspect(error)}"
+          "❌ An error occurred while attempting to save an event on database. #{inspect(error)}"
         )
 
         error

@@ -11,7 +11,7 @@ defmodule BugsChannel.Channels.Gnat.Channel do
       Gnat.pub(:gnat, topic, message)
     rescue
       e ->
-        Logger.error("An error occurred while attempting to publish a message. #{inspect(e)}")
+        Logger.error("❌ An error occurred while attempting to publish a message. #{inspect(e)}")
         {:error, :gnat_publish_failed}
     end
   end

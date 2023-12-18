@@ -52,6 +52,9 @@ defmodule BugsChannel.Repo.Schemas.Event do
 
   ## Examples
 
+      iex> BugsChannel.Repo.Schemas.Event.parse(nil)
+      {:error, "invalid event"}
+
       iex> BugsChannel.Repo.Schemas.Event.parse(%{ "title" => "foo", "body" => "bar", "kind" => "error", "tags" => ["foo:bar"] })
       {:ok,
       %BugsChannel.Repo.Schemas.Event{
@@ -89,4 +92,6 @@ defmodule BugsChannel.Repo.Schemas.Event do
   def parse(params) when is_map(params) do
     %__MODULE__{} |> __MODULE__.changeset(params) |> apply_action(:update)
   end
+
+  def parse(_), do: {:error, "invalid event"}
 end

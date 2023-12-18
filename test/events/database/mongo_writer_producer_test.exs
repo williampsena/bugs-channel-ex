@@ -4,7 +4,6 @@ defmodule BugsChannel.Events.Database.MongoWriterProducerTest do
   import Mock
   import ExUnit.CaptureLog
   import BugsChannel.Test.Support.FixtureHelper
-  import BugsChannel.Factories.Event
 
   alias BugsChannel.Repo
   alias BugsChannel.Events.Database.MongoWriterProducer
@@ -29,23 +28,16 @@ defmodule BugsChannel.Events.Database.MongoWriterProducerTest do
 
   describe "enqueue/2" do
     test "with default options" do
-      assert MongoWriterProducer.enqueue(:sentry, %{"foo" => "bar"}) == :ok
+      assert MongoWriterProducer.enqueue(:home, %{"foo" => "bar"}) == :ok
     end
   end
 
   describe "handle_cast/2" do
     setup do
-      event = build(:event)
-      sentry_event = load_json_fixture("sentry/event.json")
-      event_id = event.id
+      event = load_json_fixture("events/event.json")
       default_state = [done: 0, errors: 0, ignored: 0]
 
-      [
-        default_state: default_state,
-        event: event,
-        sentry_event: sentry_event,
-        event_id: event_id
-      ]
+      [default_state: default_state, event: event]
     end
 
     test "with valid event", %{default_state: default_state, event: event} do
@@ -63,12 +55,27 @@ defmodule BugsChannel.Events.Database.MongoWriterProducerTest do
         assert MongoWriterProducer.handle_cast({:home, event}, default_state) ==
                  {:noreply, [errors: 1, done: 0, ignored: 0]}
 
-        assert_called(Repo.Event.insert(event))
+        assert_called(Repo.Event.insert(:_))
+      end
+    end
+
+    test "when an unexpected issue occurred while attempting to push an event", %{
+      default_state: default_state,
+      event: event
+    } do
+      with_mock(Repo.Event, [], insert: fn _event -> raise "invalid connection" end) do
+        assert capture_log(fn ->
+                 assert MongoWriterProducer.handle_cast({:home, event}, default_state) ==
+                          {:noreply, [errors: 1, done: 0, ignored: 0]}
+               end) =~
+                 "❌ An unexpected error occurred while attempting to write events to MongoDB.%RuntimeError{message: \"invalid connection\"}"
+
+        assert_called(Repo.Event.insert(:_))
       end
     end
 
     test "when an event is ignored", %{default_state: default_state} do
-      assert MongoWriterProducer.handle_cast({:home, :fake_event}, default_state) ==
+      assert MongoWriterProducer.handle_cast({:home, nil}, default_state) ==
                {:noreply, [ignored: 1, done: 0, errors: 0]}
     end
   end

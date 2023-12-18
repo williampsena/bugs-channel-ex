@@ -14,7 +14,7 @@ defmodule BugsChannel.Channels.EventChannel do
       ChannelsContext.event_channel().publish(topic, message)
     rescue
       e ->
-        Logger.error("An error occurred while attempting to publish an event. #{inspect(e)}")
+        Logger.error("❌ An error occurred while attempting to publish an event. #{inspect(e)}")
         {:error, :publish_failed}
     end
   end

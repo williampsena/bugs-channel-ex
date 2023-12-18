@@ -48,7 +48,7 @@ defmodule BugsChannel.Events.Producer do
           Map.put(acc, :done, acc[:done] + 1)
 
         error ->
-          Logger.error("An error occurred while attempting to push an event. #{inspect(error)}")
+          Logger.error("❌ An error occurred while attempting to push an event. #{inspect(error)}")
           Map.put(acc, :errors, acc[:errors] + 1)
       end
     end)
@@ -81,6 +81,6 @@ defmodule BugsChannel.Events.Producer do
   end
 
   defp maybe_scrub_list({:error, error}) do
-    Logger.error("An error occurred while attempting to parse an event. #{inspect(error)}")
+    Logger.error("❌ An error occurred while attempting to parse an event. #{inspect(error)}")
   end
 end

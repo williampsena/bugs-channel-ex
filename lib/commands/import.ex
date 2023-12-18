@@ -41,7 +41,7 @@ defmodule BugsChannel.Commands.Import do
                upsert: true
              ) do
         Logger.warning(
-          "An error occurred while attempting to insert a team(#{team.id}) into the database. #{inspect(error)}"
+          "❌ An error occurred while attempting to insert a team(#{team.id}) into the database. #{inspect(error)}"
         )
       end
     end)
@@ -58,7 +58,7 @@ defmodule BugsChannel.Commands.Import do
                upsert: true
              ) do
         Logger.warning(
-          "An error occurred while attempting to insert a service(#{service.id}) into the database. #{inspect(error)}"
+          "❌ An error occurred while attempting to insert a service(#{service.id}) into the database. #{inspect(error)}"
         )
       end
     end)

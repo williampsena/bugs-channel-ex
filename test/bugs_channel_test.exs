@@ -39,7 +39,8 @@ defmodule BugsChannelTest do
             [
               @cache_start_link,
               @web_start_link,
-              {BugsChannel.Events.Producer, []}
+              {BugsChannel.Events.Producer, []},
+              {BugsChannel.Events.Database.MongoWriterProducer, []}
             ],
             strategy: :one_for_one,
             name: BugsChannel.Supervisor
@@ -61,7 +62,8 @@ defmodule BugsChannelTest do
               @cache_start_link,
               @web_start_link,
               {BugsChannel.Settings.Manager, []},
-              {BugsChannel.Events.Producer, []}
+              {BugsChannel.Events.Producer, []},
+              {BugsChannel.Events.Database.MongoWriterProducer, []}
             ],
             strategy: :one_for_one,
             name: BugsChannel.Supervisor
@@ -83,7 +85,8 @@ defmodule BugsChannelTest do
               @cache_start_link,
               @web_start_link,
               {Bandit, [plug: BugsChannel.Plugins.Sentry.Router, port: 4001]},
-              {BugsChannel.Events.Producer, []}
+              {BugsChannel.Events.Producer, []},
+              {BugsChannel.Events.Database.MongoWriterProducer, []}
             ],
             strategy: :one_for_one,
             name: BugsChannel.Supervisor
@@ -148,7 +151,8 @@ defmodule BugsChannelTest do
                      }
                    ]}
               },
-              {BugsChannel.Events.Producer, []}
+              {BugsChannel.Events.Producer, []},
+              {BugsChannel.Events.Database.MongoWriterProducer, []}
             ],
             strategy: :one_for_one,
             name: BugsChannel.Supervisor

@@ -4,8 +4,11 @@ defmodule BugsChannel.Channels.Gnat.EventConsumer do
   """
   use BugsChannel.Channels.Gnat.Consumer
 
-  def dispatch_events(_message, topic) do
-    Logger.info("Dead letter (#{topic}) not implemented yet.")
+  def dispatch_events(message, _topic) do
+    origin = String.to_existing_atom(message["x-origin"] || "home")
+    BugsChannel.Events.Database.MongoWriterProducer.enqueue(origin, message)
+
+    Logger.debug("The message was delivered to mongo writer producer.")
 
     :ok
   end

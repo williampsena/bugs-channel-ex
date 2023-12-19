@@ -11,7 +11,9 @@ config :bugs_channel, :sentry,
 config :bugs_channel,
   nebulex_cache: BugsChannel.TestCache
 
-config :bugs_channel, :config_file, "test/fixtures/settings/config.yml"
+config :bugs_channel,
+  database_mode: "dbless",
+  config_file: "test/fixtures/settings/config.yml"
 
 config :bugs_channel, :mongo,
   connection_url: "mongodb://localhost:27017/bugs-channel-test",

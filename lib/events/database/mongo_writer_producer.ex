@@ -27,7 +27,6 @@ defmodule BugsChannel.Events.Database.MongoWriterProducer do
   def handle_cast({_origin, map_event}, state) do
     event = parse_event(map_event)
 
-
     case write_event(event) do
       :ok -> {:noreply, Keyword.put(state, :done, state[:done] + 1)}
       :ignored -> {:noreply, Keyword.put(state, :ignored, state[:ignored] + 1)}

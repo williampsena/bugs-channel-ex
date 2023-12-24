@@ -104,6 +104,8 @@ python main.py
 
 # With Redis and Kibana
 
+![kibana example](./images/screenshots/kibana-example.png)
+
 There is no database persistence in this mode, and Bugs Channel acts as a proxy, handling errors and request authentication and throttling, and eventually providing metrics via Prometheus and StatsD.
 
 ```shell
@@ -111,6 +113,8 @@ There is no database persistence in this mode, and Bugs Channel acts as a proxy,
 ```
 
 # With Mongo persistence
+
+![mongo example](./images/screenshots/mongo-example.png)
 
 If you want to save errors in the Mongo database, use the following command:
 

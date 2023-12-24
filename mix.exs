@@ -58,6 +58,8 @@ defmodule BugsChannel.MixProject do
       {:telemetry, "~> 1.0"},
       {:corsica, "~> 2.0"},
       {:mongodb_driver, "~> 1.2.0", optional: true},
+      {:redix, "~> 1.1"},
+      {:castore, ">= 0.0.0"},
 
       # development deps
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false},

@@ -25,6 +25,12 @@ jobs:
         image: mongo:6
         ports:
           - 27017:27017
+      redis:
+        image: bitnami/redis:7.0
+        environment:
+          - ALLOW_EMPTY_PASSWORD=yes
+        ports:
+          - 6379:6379
     steps:
     - name: Set up Elixir
       uses: erlef/setup-beam@v1

@@ -3,6 +3,8 @@ defmodule BugsChannel.Applications.Mongo do
   This is the mongo application module in charge of startup mongo processes.
   """
 
+  require Logger
+
   @doc ~S"""
   Starts mongo gen server
 
@@ -26,6 +28,7 @@ defmodule BugsChannel.Applications.Mongo do
   end
 
   defp do_start("mongo", config) when is_list(config) do
+    Logger.info("⚙️  Starting MongoDB application...")
     [{Mongo, [name: :mongo, url: config[:connection_url]]}]
   end
 

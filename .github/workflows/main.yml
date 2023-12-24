@@ -26,9 +26,7 @@ jobs:
         ports:
           - 27017:27017
       redis:
-        image: bitnami/redis:7.0
-        environment:
-          - ALLOW_EMPTY_PASSWORD=yes
+        image: redis:7.0
         ports:
           - 6379:6379
     steps:

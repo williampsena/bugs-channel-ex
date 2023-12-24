@@ -102,6 +102,12 @@ python main.py
 
 ## Recipes
 
+Bugs Channel dependencies are provided by Docker; use the following command: to execute dependencies such as NATS, Redis, and Mongo.
+
+```shell
+sh dev.sh
+```
+
 # With Redis and Kibana
 
 ![kibana example](./images/screenshots/kibana-example.png)

@@ -1,0 +1,54 @@
+version: '3.8'
+
+name: elk
+
+services:
+  elasticsearch:
+    image: bitnami/elasticsearch:8
+    networks:
+      - elk
+    ports:
+      - 9200:9200
+    volumes:
+      - elasticsearch-data:/bitnami/elasticsearch/data
+    environment:
+        discovery.type: single-node
+        ELASTICSEARCH_PORT_NUMBER: 9200
+        ELASTICSEARCH_CLUSTER_NAME: docker-elk
+        ES_JAVA_OPTS: -Xms512m -Xmx512m
+
+  logstash:
+    image: bitnami/logstash:7
+    networks:
+      - elk
+      - redis
+    environment:
+      LOGSTASH_PIPELINE_CONF_FILENAME: "logstash_docker.conf"
+    volumes:
+      - ./docker/assets/logstash/pipeline:/bitnami/logstash/pipeline
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: bitnami/kibana:7
+    networks:
+      - elk
+    ports:
+      - 5601:5601
+    environment:
+      - KIBANA_ELASTICSEARCH_URL=elasticsearch
+    volumes:
+      - kibana-data:/bitnami/kibana
+    depends_on:
+      - elasticsearch
+
+volumes:
+  elasticsearch-data:
+  kibana-data:
+
+networks:
+  elk:
+    name: elk
+  redis:
+    name: redis
+    external: true

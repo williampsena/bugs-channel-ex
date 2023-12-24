@@ -24,6 +24,9 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Identify the project by the requested authentication keys
 - Adds cache strategies
 - Adds Mongo persistence and tasks to import yaml files
+- Adds Redis as an plugin alternative
+- Create a docker deployment example
+- Create an example using events and Kibana
 
 ## TODO
 
@@ -34,14 +37,11 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Support BugsChannel HTTP routes
 - Grpc support
 - Adds Graylog as an plugin alternative
-- Adds Redis as an plugin alternative
 - Adds Rabbit as a channel alternative
-- Create an example using events and Kibana
 - Create an example using Graylog and events
 - Create an example using events and PostgreSQL
 - Create an event user interface
 - Create a Helm Chart for Kubernetes deployments
-- Create a docker deployment example
 - Adds telemetry metrics with Prometheus and StatsD as options
 - Handle Honeybadger events from their SDKs
 - Handle Rollbar events from their SDKs
@@ -50,7 +50,6 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 # Running project
 
 The command below starts a web application that listens on port 4000 by default.
-
 
 
 ```shell
@@ -100,6 +99,29 @@ pip install --user sentry-sdk
 ```shell
 python main.py
 ```
+
+## Recipes
+
+# With Redis and Kibana
+
+There is no database persistence in this mode, and Bugs Channel acts as a proxy, handling errors and request authentication and throttling, and eventually providing metrics via Prometheus and StatsD.
+
+```shell
+ LOG_LEVEL=debug DATABASE_MODE=dbless iex -S mix api
+```
+
+# With Mongo persistence
+
+If you want to save errors in the Mongo database, use the following command:
+
+```shell
+ LOG_LEVEL=debug DATABASE_MODE=mongo iex -S mix api
+```
+
+Any Sentry integration can be used to feed errors into MongoDB.
+
+> Events will persisted at Mongo and next updates will add Rest API as backend for Bugs Channel UI, that's next steps build a rich UI.
+
 
 # Tests
 

@@ -130,7 +130,7 @@ If you want to save errors in the Mongo database, use the following command:
 
 Any Sentry integration can be used to feed errors into MongoDB.
 
-> Events will persisted at Mongo and next updates will add Rest API as backend for Bugs Channel UI, that's next steps build a rich UI.
+> Events will be stored in MongoDB, and future upgrades will provide a Rest API as a backend for the Bugs Channel UI, which is the next step in creating a rich UI.
 
 
 # Tests

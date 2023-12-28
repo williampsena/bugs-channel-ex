@@ -47,12 +47,20 @@ defmodule BugsChannel.Repo.EventTest do
     end
   end
 
-  describe "list/1" do
+  describe "list_by_service/1" do
     test "when there is no events" do
-      assert Repo.Event.list("657529b00000000000000000") == []
+      assert Repo.Event.list_by_service("657529b00000000000000000") ==
+               %BugsChannel.Repo.Query.PagedResults{
+                 data: [],
+                 meta: %{offset: 0, limit: 25, page: 0}
+               }
     end
 
     test "when a event is found", %{event: event} do
+      events = Repo.Event.list_by_service(event.service_id)
+
+      assert events.meta == %{limit: 25, offset: 0, page: 0}
+
       assert match?(
                %BugsChannel.Repo.Schemas.Event{
                  platform: "python",
@@ -72,7 +80,44 @@ defmodule BugsChannel.Repo.EventTest do
                  title: "FooException: Bar messages",
                  updated_at: nil
                },
-               List.first(Repo.Event.list(event.service_id))
+               List.first(events.data)
+             )
+    end
+  end
+
+  describe "list/1" do
+    test "when there is no events" do
+      assert Repo.Event.list(%{"platform" => "cobol"}) == %BugsChannel.Repo.Query.PagedResults{
+               data: [],
+               meta: %{offset: 0, limit: 25, page: 0}
+             }
+    end
+
+    test "when a event is found" do
+      events = Repo.Event.list(%{"platform" => "python"})
+
+      assert events.meta == %{limit: 25, offset: 0, page: 0}
+
+      assert match?(
+               %BugsChannel.Repo.Schemas.Event{
+                 platform: "python",
+                 body: "Bar messages",
+                 environment: nil,
+                 extra_args: nil,
+                 inserted_at: nil,
+                 kind: "error",
+                 level: "error",
+                 meta_id: nil,
+                 origin: :sentry,
+                 release: nil,
+                 server_name: nil,
+                 service_id: "1",
+                 stack_trace: [%{"type" => "FooException", "value" => "Bar messages"}],
+                 tags: [],
+                 title: "FooException: Bar messages",
+                 updated_at: nil
+               },
+               List.first(events.data)
              )
     end
   end

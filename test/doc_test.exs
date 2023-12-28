@@ -16,7 +16,10 @@ defmodule BugsChannel.DocTest do
   doctest BugsChannel.Applications.Sentry
   doctest BugsChannel.Applications.Settings
 
+  doctest BugsChannel.Repo.Base
   doctest BugsChannel.Repo.Parsers.Base
   doctest BugsChannel.Repo.Parsers.Service
   doctest BugsChannel.Repo.Parsers.Event
+  doctest BugsChannel.Repo.Query.QueryCursor
+  doctest BugsChannel.Repo.Query.PagedResults
 end

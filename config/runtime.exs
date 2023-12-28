@@ -16,6 +16,9 @@ config :bugs_channel,
   server_port: String.to_integer(System.get_env("PORT") || "4000")
 
 if System.get_env("MIX_ENV") == "prod" do
+  config :bugs_channel, :query,
+    query_results_per_page: String.to_integer(System.get_env("QUERY_RESULTS_PER_PAGE") || "25")
+
   config :bugs_channel, :sentry,
     enabled: System.get_env("SENTRY_ENABLED") == "true",
     port: String.to_integer(System.get_env("SENTRY_PORT") || "4001")

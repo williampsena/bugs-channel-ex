@@ -2,6 +2,7 @@ defmodule BugsChannel.Repo.Behaviours.Base do
   @moduledoc """
   This module contains base behaviors.
   """
+  alias BugsChannel.Repo.Query.{PagedResults, QueryCursor}
 
   @callback get_by_id(collection :: String.t(), id :: String.t()) ::
               BSON.document() | nil | {:error, any}
@@ -14,4 +15,8 @@ defmodule BugsChannel.Repo.Behaviours.Base do
 
   @callback insert(collection :: String.t(), struct :: struct()) ::
               {:ok, Mongo.InsertOneResult.t()} | nil | {:error, any}
+
+  @callback build_query_options(list(), %QueryCursor{}) :: list()
+
+  @callback with_paged_results(list(), %QueryCursor{}) :: PagedResults
 end

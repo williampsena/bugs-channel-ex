@@ -1,20 +1,16 @@
-defmodule BugsChannel.Plugs.HealthCheckTest do
+defmodule BugsChannel.Api.Controllers.HealthCheckTest do
   use ExUnit.Case
   use Plug.Test
 
   import BugsChannel.Test.Support.ApiHelper
 
-  alias BugsChannel.Plugs.HealthCheck
-
-  test "initialize plug" do
-    assert HealthCheck.init(foo: "bar") == [foo: "bar"]
-  end
+  alias BugsChannel.Api.Controllers.HealthCheck, as: HealthCheckController
 
   test "returns health message" do
     conn =
       :get
       |> conn("/", "")
-      |> HealthCheck.call([])
+      |> HealthCheckController.index(%{})
 
     assert_conn(conn, 200, "Keep calm I'm absolutely alive 🐛")
   end

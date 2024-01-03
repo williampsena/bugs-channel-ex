@@ -15,6 +15,7 @@ defmodule BugsChannel.DocTest do
   doctest BugsChannel.Applications.Redis
   doctest BugsChannel.Applications.Sentry
   doctest BugsChannel.Applications.Settings
+  doctest BugsChannel.Applications.Api
 
   doctest BugsChannel.Repo.Base
   doctest BugsChannel.Repo.Parsers.Base

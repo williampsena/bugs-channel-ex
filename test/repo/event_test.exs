@@ -93,8 +93,8 @@ defmodule BugsChannel.Repo.EventTest do
              }
     end
 
-    test "when a event is found" do
-      events = Repo.Event.list(%{"platform" => "python"})
+    test "when a event is found", %{event: event} do
+      events = Repo.Event.list(%{"service_id" => "#{event.service_id}", "platform" => "python"})
 
       assert events.meta == %{limit: 25, offset: 0, page: 0}
 

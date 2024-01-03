@@ -1,6 +1,9 @@
-defmodule BugsChannel.Router do
+defmodule BugsChannel.Api.Router do
   use Plug.Router
   use Plug.ErrorHandler
+  use BugsChannel.Api.RouterHandler
+
+  alias BugsChannel.Api.Controllers
 
   import BugsChannel.Utils.Config
   import BugsChannel.Plugs.Api
@@ -19,7 +22,11 @@ defmodule BugsChannel.Router do
 
   plug(:dispatch)
 
-  forward("/health_check", to: BugsChannel.Plugs.HealthCheck)
+  get("/health_check", do: controller(conn, Controllers.HealthCheck, :index))
+
+  if BugsChannel.mongo_as_target?() do
+    get("/services/:id", do: controller(conn, Controllers.Service, :show, %{"id" => id}))
+  end
 
   match(_, do: send_not_found_resp(conn))
 

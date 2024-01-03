@@ -37,6 +37,17 @@ defmodule BugsChannel.Plugs.ApiTest do
 
       assert_conn(conn, 202, Jason.encode!(body))
     end
+
+    test "with struct" do
+      team = %BugsChannel.Repo.Schemas.Team{name: "foo"}
+
+      conn =
+        :get
+        |> conn("/", "")
+        |> Api.send_json_resp(team)
+
+      assert_conn(conn, 200, Jason.encode!(%{"id" => nil, "name" => "foo"}))
+    end
   end
 
   describe "send_not_found_resp" do
@@ -119,7 +130,7 @@ defmodule BugsChannel.Plugs.ApiTest do
     end
   end
 
-   describe "send_forbidden_resp" do
+  describe "send_forbidden_resp" do
     test "with default message" do
       conn =
         :get

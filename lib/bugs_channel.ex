@@ -17,7 +17,7 @@ defmodule BugsChannel do
     children =
       [
         {BugsChannel.Cache, []},
-        {Bandit, plug: BugsChannel.Router, port: server_port()}
+        {Bandit, plug: BugsChannel.Api.Router, port: server_port()}
       ] ++
         Applications.Settings.start(database_mode()) ++
         Applications.Sentry.start() ++

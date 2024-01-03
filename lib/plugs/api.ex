@@ -5,12 +5,19 @@ defmodule BugsChannel.Plugs.Api do
 
   import Plug.Conn
 
+  alias BugsChannel.Utils.Maps
+
   def put_json_header(%Plug.Conn{} = conn) do
     put_resp_content_type(conn, "application/json")
   end
 
   def send_json_resp(%Plug.Conn{} = conn, message, status \\ 200) when is_integer(status) do
-    message = if is_binary(message), do: message, else: Jason.encode!(message)
+    message =
+      cond do
+        is_binary(message) -> message
+        is_struct(message) -> message |> Maps.map_from_struct() |> Jason.encode!()
+        true -> Jason.encode!(message)
+      end
 
     conn
     |> put_json_header()

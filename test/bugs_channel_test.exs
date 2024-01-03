@@ -5,7 +5,7 @@ defmodule BugsChannelTest do
   import ExUnit.CaptureLog
 
   @cache_start_link {BugsChannel.Cache, []}
-  @web_start_link {Bandit, [plug: BugsChannel.Router, port: 4000]}
+  @web_start_link {Bandit, [plug: BugsChannel.Api.Router, port: 4000]}
   @redix_start_link {Redix, {"redis://localhost:6379/1", [name: :redix]}}
   @mongo_start_link {Mongo, [name: :mongo, url: "mongodb://localhost:27017/bugs-channel-test"]}
   @settings_manager_start_link {BugsChannel.Settings.Manager, []}
@@ -98,7 +98,7 @@ defmodule BugsChannelTest do
               @settings_manager_start_link,
               @event_producer,
               @redis_push_producer,
-              @redix_start_link,
+              @redix_start_link
             ],
             strategy: :one_for_one,
             name: BugsChannel.Supervisor

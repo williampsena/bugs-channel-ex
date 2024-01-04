@@ -8,7 +8,12 @@ defmodule BugsChannel.Test.Support.ApiHelper do
   def assert_conn(%Plug.Conn{} = conn, status_code, body) when is_integer(status_code) do
     assert conn.state == :sent
     assert conn.status == status_code
-    assert conn.resp_body == body
+
+    if is_map(body) do
+      assert Jason.decode!(conn.resp_body) == body
+    else
+      assert conn.resp_body == body
+    end
   end
 
   def put_params(conn, params) do

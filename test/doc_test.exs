@@ -23,4 +23,6 @@ defmodule BugsChannel.DocTest do
   doctest BugsChannel.Repo.Parsers.Event
   doctest BugsChannel.Repo.Query.QueryCursor
   doctest BugsChannel.Repo.Query.PagedResults
+
+  doctest BugsChannel.Api.Views.PagedResults
 end

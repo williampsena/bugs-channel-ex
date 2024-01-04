@@ -6,21 +6,6 @@ defmodule BugsChannel.Utils.Maps do
   @ecto_meta_fields ~w(__meta__ schema)a
 
   @doc ~S"""
-  Safely parse a map string to map atoms.
-
-  ## Examples
-
-      iex> BugsChannel.Utils.Maps.parse_map_atoms(%{"foo" => "bar", "bar" => "foo", "foo_bar" => "bar_foo"}, ~w(foo bar))
-      %{foo: "bar", bar: "foo"}
-
-  """
-  def parse_map_atoms(map, allowed_keys) do
-    map = Map.filter(map, fn {key, _value} -> key in allowed_keys end)
-
-    for {key, val} <- map, into: %{}, do: {String.to_atom(key), val}
-  end
-
-  @doc ~S"""
   Safely parse a struct to map atoms.
 
   ## Examples
@@ -70,5 +55,4 @@ defmodule BugsChannel.Utils.Maps do
   end
 
   defp parse_struct(value), do: value
-
 end

@@ -7,6 +7,7 @@ defmodule BugsChannel.Api.Controllers.Controller do
     quote location: :keep do
       import Plug.Conn
       import BugsChannel.Plugs.Api
+      import BugsChannel.Api.Views.PagedResults
     end
   end
 end

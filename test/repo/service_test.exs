@@ -4,6 +4,7 @@ defmodule BugsChannel.Repo.ServiceTest do
   import BugsChannel.Factories.Service
   import Mox
 
+  alias BugsChannel.Repo.Query.QueryCursor
   alias BugsChannel.Repo, as: Repo
 
   setup :verify_on_exit!
@@ -101,6 +102,35 @@ defmodule BugsChannel.Repo.ServiceTest do
       assert {:ok, inserted_service} = Repo.Service.insert(service)
       assert match?(%BugsChannel.Repo.Schemas.Service{}, inserted_service)
       refute is_nil(inserted_service.id)
+    end
+  end
+
+  describe "list/1" do
+    test "when there is no service" do
+      assert Repo.Service.list(%{"name" => "bug"}) == %BugsChannel.Repo.Query.PagedResults{
+               data: [],
+               meta: %{count: 0, offset: 0, limit: 25, page: 0},
+               local: %{empty: true}
+             }
+    end
+
+    test "when a service is found", %{service: service} do
+      service = Map.put(service, :name, "bug service")
+
+      {:ok, inserted_service} =
+        Repo.Service.insert(service)
+
+      services = Repo.Service.list(%{"name" => service.name})
+      count = Kernel.length(services.data)
+
+      assert services.local == %{
+               empty: false,
+               next_page: %QueryCursor{offset: 25, limit: 25, page: 1}
+             }
+
+      assert services.meta == %{limit: 25, offset: 0, page: 0, count: count}
+
+      assert List.first(services.data) == inserted_service
     end
   end
 end

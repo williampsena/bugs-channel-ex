@@ -18,5 +18,8 @@ defmodule BugsChannel.Repo.Behaviours.Base do
 
   @callback build_query_options(list(), %QueryCursor{}) :: list()
 
-  @callback with_paged_results(list(), %QueryCursor{}) :: PagedResults
+  @callback with_paged_results(list(), %QueryCursor{}) :: %PagedResults{
+              data: maybe_improper_list(),
+              meta: %{limit: integer(), offset: integer(), page: integer()}
+            }
 end

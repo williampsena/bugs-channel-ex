@@ -8,10 +8,8 @@ defmodule BugsChannel.Repo.Event do
   import BugsChannel.Repo.Parsers.Event
 
   alias BugsChannel.Repo.Schemas, as: RepoSchemas
-  alias BugsChannel.Repo.Query.QueryCursor
 
   @collection "events"
-  @default_query_cursor QueryCursor.build(0)
 
   def get(id) do
     @collection
@@ -24,8 +22,7 @@ defmodule BugsChannel.Repo.Event do
   end
 
   def list(filters, query_cursor \\ nil) when is_map(filters) do
-    query_cursor = query_cursor || @default_query_cursor
-    query_opts = build_query_options([], query_cursor)
+    {query_cursor, query_opts} = build_query_options([], query_cursor)
 
     @collection
     |> find(filters, query_opts)

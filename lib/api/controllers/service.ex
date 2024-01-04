@@ -7,6 +7,11 @@ defmodule BugsChannel.Api.Controllers.Service do
 
   alias BugsChannel.Repo.Service
 
+  def index(%Plug.Conn{} = conn, filters) do
+    paged_results = Service.list(filters)
+    send_json_resp(conn, render(paged_results))
+  end
+
   def show(%Plug.Conn{} = conn, %{"id" => id}) do
     case Service.get(id) do
       nil -> send_not_found_resp(conn)

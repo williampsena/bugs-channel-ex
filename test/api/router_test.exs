@@ -8,6 +8,16 @@ defmodule BugsChannel.Api.RouterTest do
   alias BugsChannel.Api.Router
   alias BugsChannel.Api.Controllers.HealthCheck, as: HealthCheckController
 
+  setup do
+    Application.put_env(:bugs_channel, :database_mode, "mongo")
+
+    on_exit(fn ->
+      Application.put_env(:bugs_channel, :database_mode, "dbless")
+    end)
+
+    :ok
+  end
+
   test "returns not found" do
     conn =
       :get
@@ -42,13 +52,29 @@ defmodule BugsChannel.Api.RouterTest do
   end
 
   describe "service routes" do
-    test "returns /service/:id some response" do
+    test "returns /services/:id some response" do
       conn =
         :get
-        |> conn("/service/657529b00000000000000000", "")
+        |> conn("/services/657529b00000000000000000", "")
         |> Router.call([])
 
       assert_conn(conn, 404, "Oops! 👀")
+    end
+
+    test "returns /services some response" do
+      conn =
+        :get
+        |> conn("/services", %{"name" => "null"})
+        |> Router.call([])
+
+      assert_conn(
+        conn,
+        200,
+        %{
+          "data" => [],
+          "meta" => %{"count" => 0, "offset" => 0, "limit" => 25, "page" => 0}
+        }
+      )
     end
   end
 end

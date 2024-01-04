@@ -24,7 +24,8 @@ defmodule BugsChannel.Api.Router do
 
   get("/health_check", do: controller(conn, Controllers.HealthCheck, :index))
 
-  if BugsChannel.mongo_as_target?() do
+  if BugsChannel.mongo_as_target?() || test?() do
+    get("/services", do: controller(conn, Controllers.Service, :index, conn.params))
     get("/services/:id", do: controller(conn, Controllers.Service, :show, %{"id" => id}))
   end
 

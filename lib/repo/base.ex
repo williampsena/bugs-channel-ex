@@ -7,6 +7,8 @@ defmodule BugsChannel.Repo.Base do
 
   @behaviour BugsChannel.Repo.Behaviours.Base
 
+  @default_query_cursor QueryCursor.build(0)
+
   @doc """
   Select one document in a collection by id.
   """
@@ -46,25 +48,31 @@ defmodule BugsChannel.Repo.Base do
 
   ## Examples
 
-      iex> BugsChannel.Repo.Base.build_query_options([], %BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 25})
-      [ skip: 0, limit: 25 ]
+      iex> BugsChannel.Repo.Base.build_query_options([], %BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 20})
+      {%BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 20}, [skip: 0, limit: 20]}
+
+      iex> BugsChannel.Repo.Base.build_query_options([], nil)
+      {%BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 25}, [skip: 0, limit: 25]}
 
   """
+  def build_query_options(opts, nil),
+    do: build_query_options(opts, @default_query_cursor)
+
   def build_query_options(opts, %QueryCursor{} = query_cursor) do
-    Keyword.merge(opts,
-      skip: query_cursor.offset,
-      limit: query_cursor.limit
-    )
+    {query_cursor,
+     Keyword.merge(opts,
+       skip: query_cursor.offset,
+       limit: query_cursor.limit
+     )}
   end
 
   @doc """
   Build mongo query options such as pagination parameters
-  Build an query cursor schema
 
   ## Examples
 
-      iex> BugsChannel.Repo.Base.build_query_options([], %BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 25})
-      [ skip: 0, limit: 25 ]
+      iex> BugsChannel.Repo.Base.with_paged_results([], %BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 25})
+      %BugsChannel.Repo.Query.PagedResults{data: [], meta: %{count: 0, offset: 0, limit: 25, page: 0}, local: %{empty: true}}
 
   """
   def with_paged_results(results, %QueryCursor{} = query_cursor) when is_list(results) do

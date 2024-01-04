@@ -27,14 +27,16 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Adds Redis as an plugin alternative
 - Create a docker deployment example
 - Create an example using events and Kibana
+- Adds MongoDB as an alternative for event persistence
+- Support BugsChannel HTTP routes
 
 ## TODO
 
-- Adds MongoDB as an alternative for event persistence
+- Adds telemetry metrics with Prometheus and StatsD as options
+- Create a project diagram
 - Generate documentation with ex_doc
 - By project, implement the rate-limit strategy
 - Adds PostgreSQL as an alternative for event persistence
-- Support BugsChannel HTTP routes
 - Grpc support
 - Adds Graylog as an plugin alternative
 - Adds Rabbit as a channel alternative
@@ -42,10 +44,8 @@ I use [Sentry](https://sentry.io) and [Honeybadger](https://www.honeybadger.io),
 - Create an example using events and PostgreSQL
 - Create an event user interface
 - Create a Helm Chart for Kubernetes deployments
-- Adds telemetry metrics with Prometheus and StatsD as options
 - Handle Honeybadger events from their SDKs
 - Handle Rollbar events from their SDKs
-- Create a project diagram
 
 # Running project
 

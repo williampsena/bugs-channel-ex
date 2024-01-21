@@ -52,7 +52,7 @@ defmodule BugsChannel.Api.RouterTest do
   end
 
   describe "service routes" do
-    test "returns /services/:id some response" do
+    test "returns GET /services/:id some response" do
       conn =
         :get
         |> conn("/services/657529b00000000000000000", "")
@@ -61,7 +61,7 @@ defmodule BugsChannel.Api.RouterTest do
       assert_conn(conn, 404, "Oops! 👀")
     end
 
-    test "returns /services some response" do
+    test "returns GET /services some response" do
       conn =
         :get
         |> conn("/services", %{"name" => "null"})
@@ -74,6 +74,19 @@ defmodule BugsChannel.Api.RouterTest do
           "data" => [],
           "meta" => %{"count" => 0, "offset" => 0, "limit" => 25, "page" => 0}
         }
+      )
+    end
+
+    test "returns POST /services some response" do
+      conn =
+        :post
+        |> conn("/services", %{"empty" => true})
+        |> Router.call([])
+
+      assert_conn(
+        conn,
+        422,
+        Jason.encode!(%{"error" => ["name: can't be blank", "platform: can\'t be blank"]})
       )
     end
   end

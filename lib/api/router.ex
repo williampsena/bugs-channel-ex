@@ -16,7 +16,7 @@ defmodule BugsChannel.Api.Router do
 
   plug(:match)
 
-  plug(Plug.Parsers, parsers: [:urlencoded, :multipart])
+  plug(Plug.Parsers, parsers: [:urlencoded, :multipart, :json], json_decoder: Jason)
 
   if development?(), do: plug(Plug.Logger, log: :debug)
 
@@ -27,6 +27,7 @@ defmodule BugsChannel.Api.Router do
   if BugsChannel.mongo_as_target?() || test?() do
     get("/services", do: controller(conn, Controllers.Service, :index, conn.params))
     get("/services/:id", do: controller(conn, Controllers.Service, :show, %{"id" => id}))
+    post("/services", do: controller(conn, Controllers.Service, :create, conn.params))
   end
 
   match(_, do: send_not_found_resp(conn))

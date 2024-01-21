@@ -16,7 +16,7 @@ defmodule BugsChannel.Repo.Behaviours.Base do
   @callback insert(collection :: String.t(), struct :: struct()) ::
               {:ok, Mongo.InsertOneResult.t()} | nil | {:error, any}
 
-  @callback build_query_options(list(), %QueryCursor{}) :: list()
+  @callback build_query_options(list(), %QueryCursor{} | nil) :: list()
 
   @callback with_paged_results(list(), %QueryCursor{}) :: %PagedResults{
               data: maybe_improper_list(),

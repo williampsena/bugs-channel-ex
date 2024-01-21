@@ -5,17 +5,34 @@ defmodule BugsChannel.Api.Controllers.Service do
 
   use BugsChannel.Api.Controllers.Controller
 
-  alias BugsChannel.Repo.Service
+  alias BugsChannel.{Repo, Repo.Schemas, Repo.Parsers}
 
   def index(%Plug.Conn{} = conn, filters) do
-    paged_results = Service.list(filters)
+    paged_results = Repo.Service.list(filters)
     send_json_resp(conn, render(paged_results))
   end
 
   def show(%Plug.Conn{} = conn, %{"id" => id}) do
-    case Service.get(id) do
+    case Repo.Service.get(id) do
       nil -> send_not_found_resp(conn)
-      service -> send_json_resp(conn, service)
+      %Schemas.Service{} = service -> send_json_resp(conn, service)
+    end
+  end
+
+  def create(%Plug.Conn{} = conn, params) do
+    case Parsers.Service.parse(params) do
+      {:error, changeset} ->
+        send_unprocessable_entity_resp(conn, render_ecto_error(changeset))
+
+      %Schemas.Service{} = service ->
+        do_create(conn, service)
+    end
+  end
+
+  defp do_create(%Plug.Conn{} = conn, %Schemas.Service{} = service) do
+    case Repo.Service.insert(service) do
+      {:ok, _} -> send_no_content(conn)
+      {:error, error} -> send_unknown_error_resp(conn, render_error(error))
     end
   end
 end

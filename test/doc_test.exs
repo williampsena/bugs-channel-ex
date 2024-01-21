@@ -25,4 +25,5 @@ defmodule BugsChannel.DocTest do
   doctest BugsChannel.Repo.Query.PagedResults
 
   doctest BugsChannel.Api.Views.PagedResults
+  doctest BugsChannel.Api.Views.Error
 end

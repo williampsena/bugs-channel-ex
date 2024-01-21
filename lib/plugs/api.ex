@@ -31,13 +31,18 @@ defmodule BugsChannel.Plugs.Api do
   end
 
   def send_unprocessable_entity_resp(%Plug.Conn{} = conn, message \\ "Payload is invalid") do
-    conn
-    |> put_json_header()
-    |> send_resp(422, Jason.encode!(%{"error" => message}))
+    message =
+      if is_binary(message),
+        do: %{"error" => message},
+        else: message
+
+    send_json_resp(conn, message, 422)
   end
 
   def send_unknown_error_resp(%Plug.Conn{} = conn, message \\ "Something went wrong 😦") do
-    send_resp(conn, 500, message)
+    if is_binary(message),
+      do: send_resp(conn, 500, message),
+      else: send_json_resp(conn, message, 500)
   end
 
   def send_unauthorized_resp(%Plug.Conn{} = conn, message \\ "Missing credentials 🪪") do
@@ -53,5 +58,9 @@ defmodule BugsChannel.Plugs.Api do
     conn
     |> put_resp_header("x-rate-limit", "#{limit}")
     |> send_resp(429, message)
+  end
+
+  def send_no_content(%Plug.Conn{} = conn) do
+    send_resp(conn, 204, "")
   end
 end

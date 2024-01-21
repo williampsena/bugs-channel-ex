@@ -88,6 +88,15 @@ defmodule BugsChannel.Plugs.ApiTest do
 
       assert_conn(conn, 422, Jason.encode!(%{"error" => "Invalid payload"}))
     end
+
+    test "with map as custom message" do
+      conn =
+        :get
+        |> conn("/", "")
+        |> Api.send_unprocessable_entity_resp(%{"data" => "Invalid payload"})
+
+      assert_conn(conn, 422, Jason.encode!(%{"data" => "Invalid payload"}))
+    end
   end
 
   describe "send_unknown_error_resp" do
@@ -107,6 +116,15 @@ defmodule BugsChannel.Plugs.ApiTest do
         |> Api.send_unknown_error_resp("Too bad!")
 
       assert_conn(conn, 500, "Too bad!")
+    end
+
+    test "with json message" do
+      conn =
+        :get
+        |> conn("/", "")
+        |> Api.send_unknown_error_resp(%{"field" => "unknown"})
+
+      assert_conn(conn, 500, Jason.encode!(%{"field" => "unknown"}))
     end
   end
 
@@ -170,5 +188,14 @@ defmodule BugsChannel.Plugs.ApiTest do
       assert_conn(conn, 429, "Hold on ✋!")
       assert {"x-rate-limit", "100"} in conn.resp_headers
     end
+  end
+
+  describe "send_no_content" do
+    conn =
+      :get
+      |> conn("/", "")
+      |> Api.send_no_content()
+
+    assert_conn(conn, 204, "")
   end
 end

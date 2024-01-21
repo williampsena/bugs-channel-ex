@@ -14,10 +14,10 @@ defmodule BugsChannel.Plugins.Sentry.Event do
 
   ## Examples
 
-      iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => "1", "project" => 1, "items" => [ %{ "message" => "foo" } ] })
+      iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => "1", "project" => "1", "items" => [ %{ "message" => "foo" } ] })
       {:ok, [%BugsChannel.Repo.Schemas.Event{
         id: "1",
-        service_id: 1,
+        service_id: "1",
         platform: nil,
         environment: nil,
         release: nil,
@@ -36,7 +36,7 @@ defmodule BugsChannel.Plugins.Sentry.Event do
       iex> BugsChannel.Plugins.Sentry.Event.parse_to_event(%{ "event_id" => event_id, "project" => 1, "items" => [ %{"exception" => %{"values" => [ %{"type" => "FooException", "value" => "Bar messages" } ] } } ] })
       {:ok, [%BugsChannel.Repo.Schemas.Event{
         id: "00000000-0000-0000-0000-000000000000",
-        service_id: 1,
+        service_id: "1",
         platform: nil,
         environment: nil,
         release: nil,
@@ -68,7 +68,7 @@ defmodule BugsChannel.Plugins.Sentry.Event do
 
           params = %{
             "id" => "#{event["event_id"]}",
-            "service_id" => event["project"],
+            "service_id" => "#{event["project"]}",
             "platform" => sentry_event["platform"],
             "environment" => sentry_event["environment"],
             "release" => sentry_event["release"],

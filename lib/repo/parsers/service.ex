@@ -14,6 +14,9 @@ defmodule BugsChannel.Repo.Parsers.Service do
 
   ## Examples
 
+      iex> BugsChannel.Repo.Parsers.Service.parse(nil)
+      nil
+
       iex> BugsChannel.Repo.Parsers.Service.parse(nil, %{})
       nil
 
@@ -26,7 +29,7 @@ defmodule BugsChannel.Repo.Parsers.Service do
       iex> BugsChannel.Repo.Parsers.Service.parse(%{"id" => "1", "name" => "bar", "platform" => "python", "teams" => [ %{  "id" => "1", "name" => "foo" } ], "settings" => %{ "rate_limit" => 1, "auth_keys" => [ %{"key" => "key"}]} }, %BugsChannel.Repo.Schemas.Service{},  nil)
       %BugsChannel.Repo.Schemas.Service{
         auth_keys: [],
-        id: "",
+        id: "1",
         name: "bar",
         platform: "python",
         settings: %BugsChannel.Repo.Schemas.ServiceSettings{rate_limit: 1},
@@ -34,6 +37,8 @@ defmodule BugsChannel.Repo.Parsers.Service do
       }
 
   """
+  def parse(doc), do: parse(doc, %RepoSchemas.Service{}, nil)
+
   def parse(doc, schema), do: parse(doc, schema, nil)
 
   def parse(_doc, nil, _default_value), do: {:error, :invalid_schema}
@@ -43,48 +48,37 @@ defmodule BugsChannel.Repo.Parsers.Service do
   def parse(doc, %RepoSchemas.Service{} = schema, default_value)
       when is_map(doc) and is_struct(schema) do
     params = %{
-      id: "#{doc["_id"]}",
+      id: "#{doc["_id"] || doc["id"]}",
       name: doc["name"],
       platform: doc["platform"],
-      teams: parse(doc["teams"], %RepoSchemas.Team{}, []),
-      settings: parse(doc["settings"], %RepoSchemas.ServiceSettings{}, %{}),
-      auth_keys: parse(doc["auth_keys"], %RepoSchemas.ServiceAuthKey{}, [])
+      teams: parse_teams(doc["teams"] || []),
+      settings: parse_settings(doc["settings"] || %{}),
+      auth_keys: parse_auth_keys(doc["auth_keys"] || [])
     }
 
     EctoUtils.parse_document(schema, params, default_value)
   end
 
-  def parse(doc, %RepoSchemas.ServiceSettings{} = schema, default_value)
-      when is_map(doc) and is_struct(schema) do
-    EctoUtils.parse_document(schema, %{rate_limit: doc["rate_limit"]}, default_value)
+  defp parse_settings(doc) when is_map(doc) do
+    %{rate_limit: doc["rate_limit"]}
   end
 
-  def parse(doc, %RepoSchemas.Team{} = schema, default_value)
-      when is_list(doc) and is_struct(schema) do
+  defp parse_teams(doc) when is_list(doc) do
     Enum.map(doc, fn team ->
-      EctoUtils.parse_document(
-        schema,
-        %{
-          id: "#{team["id"]}",
-          name: team["name"]
-        },
-        default_value
-      )
+      %{
+        id: "#{team["id"]}",
+        name: team["name"]
+      }
     end)
   end
 
-  def parse(doc, %RepoSchemas.ServiceAuthKey{} = schema, default_value)
-      when is_list(doc) and is_struct(schema) do
+  defp parse_auth_keys(doc) when is_list(doc) do
     Enum.map(doc, fn auth_key ->
-      EctoUtils.parse_document(
-        schema,
-        %{
-          key: auth_key["key"],
-          disabled: auth_key["disabled"],
-          expired_at: auth_key["expired_at"]
-        },
-        default_value
-      )
+      %{
+        key: auth_key["key"],
+        disabled: auth_key["disabled"],
+        expired_at: auth_key["expired_at"]
+      }
     end)
   end
 
@@ -101,7 +95,7 @@ defmodule BugsChannel.Repo.Parsers.Service do
       ...>   "teams" => [%{"id" => "1", "name" => "foo"}]
       ...> }
       ...> BugsChannel.Repo.Parsers.Service.parse_list([doc], %BugsChannel.Repo.Schemas.Service{})
-      [%BugsChannel.Repo.Schemas.Service{id: "", name: "bar", platform: "python", teams: [%BugsChannel.Repo.Schemas.Team{id: "1", name: "foo"}], settings: %BugsChannel.Repo.Schemas.ServiceSettings{rate_limit: 1}, auth_keys: []}]
+      [%BugsChannel.Repo.Schemas.Service{id: "1", name: "bar", platform: "python", teams: [%BugsChannel.Repo.Schemas.Team{id: "1", name: "foo"}], settings: %BugsChannel.Repo.Schemas.ServiceSettings{rate_limit: 1}, auth_keys: []}]
   """
   def parse_list(docs, schema) when is_list(docs) and is_struct(schema),
     do: parse_list(docs, schema, [])

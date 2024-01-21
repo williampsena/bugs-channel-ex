@@ -9,7 +9,7 @@ defmodule BugsChannel.Repo.Schemas.Event do
   @foreign_key_type :string
 
   schema "event" do
-    field(:service_id, :integer)
+    field(:service_id, :string)
     field(:meta_id, :string)
     field(:platform, :string)
     field(:environment, :string, default: "production")
@@ -32,7 +32,7 @@ defmodule BugsChannel.Repo.Schemas.Event do
 
   ## Examples
 
-      iex> BugsChannel.Repo.Schemas.Event.changeset(%BugsChannel.Repo.Schemas.Event{}, %{ "id" => "abc123", "origin" => "home", "title" => "some error", "body" => "error", "service_id" => 1, "platform" => "elixir", "release" => "git-hash", "server_name" => "foo", "kind" => "error", "environment" => "production", "stack_trace" => [], "tags" => [] }).valid?
+      iex> BugsChannel.Repo.Schemas.Event.changeset(%BugsChannel.Repo.Schemas.Event{}, %{ "id" => "abc123", "origin" => "home", "title" => "some error", "body" => "error", "service_id" => "1", "platform" => "elixir", "release" => "git-hash", "server_name" => "foo", "kind" => "error", "environment" => "production", "stack_trace" => [], "tags" => [] }).valid?
       true
 
       iex> BugsChannel.Repo.Schemas.Event.changeset(%BugsChannel.Repo.Schemas.Event{}, %{"id" => "1" }).valid?

@@ -21,8 +21,8 @@ defmodule BugsChannel.Repo.Schemas.ServiceSettings do
       iex> BugsChannel.Repo.Schemas.ServiceSettings.changeset(%BugsChannel.Repo.Schemas.ServiceSettings{}, %{ "rate_limit" => -1 }).valid?
       false
   """
-  def changeset(%__MODULE__{} = service, params) do
-    service
+  def changeset(%__MODULE__{} = service_settings, params) do
+    service_settings
     |> cast(params, ~w(rate_limit)a)
     |> validate_number(:rate_limit, greater_than: -1)
   end

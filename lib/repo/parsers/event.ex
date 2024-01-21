@@ -25,7 +25,7 @@ defmodule BugsChannel.Repo.Parsers.Event do
 
       iex> BugsChannel.Repo.Parsers.Event.parse(%{ "id" => "00000000-0000-0000-0000-000000000000",  "service_id" => "1", "platform" => "python", "title" => "FooException: Bar messages", "body" => "Bar messages", "stack_trace" => [%{"type" => "FooException", "value" => "Bar messages"}], "kind" => "error", "level" => "error", "origin" => "sentry", "tags" => [] }, %BugsChannel.Repo.Schemas.Event{})
       %BugsChannel.Repo.Schemas.Event{
-        id: "",
+        id: "00000000-0000-0000-0000-000000000000",
         service_id: "1",
         platform: "python",
         environment: nil,
@@ -51,7 +51,7 @@ defmodule BugsChannel.Repo.Parsers.Event do
   def parse(doc, %RepoSchemas.Event{} = schema, default_value)
       when is_map(doc) and is_struct(schema) do
     params = %{
-      id: "#{doc["_id"]}",
+      id: "#{doc["_id"] || doc["id"]}",
       service_id: "#{doc["service_id"]}",
       platform: doc["platform"],
       environment: doc["environment"],
@@ -76,7 +76,7 @@ defmodule BugsChannel.Repo.Parsers.Event do
   ## Examples
       iex> doc = %{ "id" => "00000000-0000-0000-0000-000000000000",  "service_id" => "1", "platform" => "python", "title" => "FooException: Bar messages", "body" => "Bar messages", "stack_trace" => [%{"type" => "FooException", "value" => "Bar messages"}], "kind" => "error", "level" => "error", "origin" => "sentry", "tags" => [] }
       ...> BugsChannel.Repo.Parsers.Event.parse_list([doc], %BugsChannel.Repo.Schemas.Event{})
-      [%BugsChannel.Repo.Schemas.Event{id: "", service_id: "1", meta_id: nil, platform: "python", environment: nil, release: nil, server_name: nil, title: "FooException: Bar messages", body: "Bar messages", stack_trace: [%{"type" => "FooException", "value" => "Bar messages"}], kind: "error", level: "error", origin: :sentry, tags: [], extra_args: nil, inserted_at: nil, updated_at: nil}]
+      [%BugsChannel.Repo.Schemas.Event{id: "00000000-0000-0000-0000-000000000000", service_id: "1", meta_id: nil, platform: "python", environment: nil, release: nil, server_name: nil, title: "FooException: Bar messages", body: "Bar messages", stack_trace: [%{"type" => "FooException", "value" => "Bar messages"}], kind: "error", level: "error", origin: :sentry, tags: [], extra_args: nil, inserted_at: nil, updated_at: nil}]
   """
   def parse_list(docs, schema) when is_list(docs) and is_struct(schema),
     do: parse_list(docs, schema, [])

@@ -1,6 +1,6 @@
 {
     "id": "ccbf33b5bfd446368efe7ef2113ec78c",
-    "service_id": 1,
+    "service_id": "65ab37300000000000000000",
     "title": "ValueError",
     "body": "Error SDK",
     "kind": "error",

@@ -9,6 +9,7 @@ defmodule BugsChannel.Api.Controllers.ServiceTest do
   alias BugsChannel.Utils.Maps
   alias BugsChannel.Repo, as: Repo
   alias BugsChannel.Api.Controllers.Service, as: ServiceController
+  alias BugsChannel.Plugs.ErrorFallback
 
   setup do
     service = build(:service)
@@ -82,10 +83,12 @@ defmodule BugsChannel.Api.Controllers.ServiceTest do
       error = "invalid connection"
 
       with_mock(Repo.Service, [:passthrough], insert: fn _service -> {:error, error} end) do
+        conn = conn(:post, "/service", "")
+
         conn =
-          :post
-          |> conn("/service", "")
+          conn
           |> ServiceController.create(service_params)
+          |> ErrorFallback.fallback(conn)
 
         assert_conn(conn, 500, %{"error" => error})
       end

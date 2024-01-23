@@ -30,9 +30,8 @@ defmodule BugsChannel.Api.Controllers.Service do
   end
 
   defp do_create(%Plug.Conn{} = conn, %Schemas.Service{} = service) do
-    case Repo.Service.insert(service) do
-      {:ok, _} -> send_no_content(conn)
-      {:error, error} -> send_unknown_error_resp(conn, render_error(error))
+    with {:ok, _} <- Repo.Service.insert(service) do
+      send_no_content(conn)
     end
   end
 end

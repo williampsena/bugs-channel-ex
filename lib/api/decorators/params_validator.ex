@@ -9,6 +9,9 @@ defmodule BugsChannel.Api.Decorators.ParamsValidator do
   import BugsChannel.Plugs.Api
   import BugsChannel.Api.Views.Error
 
+  @doc ~S"""
+    Validates the request body using the ecto schema.
+  """
   def validate_params(module, body, context) do
     quote do
       [%Plug.Conn{} = conn, %{} = params] = unquote(context.args)
@@ -20,8 +23,8 @@ defmodule BugsChannel.Api.Decorators.ParamsValidator do
           %Ecto.Changeset{valid?: false} = changeset ->
             conn |> send_unprocessable_entity_resp(render_ecto_error(changeset)) |> halt()
 
-          parsed_params ->
-            merge_assigns(conn, _params: parsed_params)
+          _ ->
+            conn
         end
 
       if conn.halted,

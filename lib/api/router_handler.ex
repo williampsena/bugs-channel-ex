@@ -7,7 +7,7 @@ defmodule BugsChannel.Api.RouterHandler do
     quote location: :keep do
       import BugsChannel.Plugs.ErrorFallback
 
-      def controller(%Plug.Conn{} = conn, controller_module, action, params \\ %{})
+      def controller(%Plug.Conn{} = conn, controller_module, action, params \\ %{}, opts \\ [])
           when is_atom(action) do
         params = Map.merge(conn.params, params)
 

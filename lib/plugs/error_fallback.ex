@@ -1,6 +1,6 @@
 defmodule BugsChannel.Plugs.ErrorFallback do
   @moduledoc """
-  This module includes API error fallbacks
+  This module includes API error fallback
   """
 
   import BugsChannel.Plugs.Api

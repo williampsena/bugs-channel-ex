@@ -79,6 +79,25 @@ defmodule BugsChannel.Utils.Ecto do
   end
 
   @doc ~S"""
+  Validate map as ecto schema
+
+  ## Examples
+
+      iex> BugsChannel.Utils.Ecto.validate_document(%BugsChannel.Repo.Schemas.Service{}, %{id: "1", name: "bar", platform: "python", teams: [ %{  id: "1", name: "foo" } ], settings: %{ rate_limit: 1 }, auth_keys: [ %{ key: "key" } ] }).valid?
+      true
+
+      iex> BugsChannel.Utils.Ecto.validate_document(%BugsChannel.Repo.Schemas.Service{}, nil).valid?
+      false
+
+      iex> changeset = BugsChannel.Utils.Ecto.validate_document(%BugsChannel.Repo.Schemas.Service{}, %{id: "1",  teams: "foo", settings: %{ rate_limit: 1 }, auth_keys: [ %{key: "key"} ] })
+      iex> changeset.errors
+      [ {:name, {"can't be blank", [validation: :required]}}, {:platform, {"can't be blank", [validation: :required]}}, {:teams, {"is invalid", [validation: :embed, type: {:array, :map}]}} ]
+  """
+  def validate_document(schema, doc) do
+    apply(schema.__struct__, :changeset, [schema, doc || %{}])
+  end
+
+  @doc ~S"""
   Parses map to defined schema
 
   ## Examples
@@ -93,67 +112,28 @@ defmodule BugsChannel.Utils.Ecto do
         teams: [%BugsChannel.Repo.Schemas.Team{ id: "1", name: "foo"}]
       }
 
-      iex> BugsChannel.Utils.Ecto.parse_document(%BugsChannel.Repo.Schemas.Service{}, nil, %{})
+      iex> BugsChannel.Utils.Ecto.parse_document(%BugsChannel.Repo.Schemas.Service{}, nil)
       {:error, :empty_document}
 
       iex> {:error, changeset} = BugsChannel.Utils.Ecto.parse_document(%BugsChannel.Repo.Schemas.Service{}, %{id: "1",  teams: "foo", settings: %{ rate_limit: 1 }, auth_keys: [ %{key: "key"} ] })
       iex> changeset.errors
       [ {:name, {"can't be blank", [validation: :required]}}, {:platform, {"can't be blank", [validation: :required]}}, {:teams, {"is invalid", [validation: :embed, type: {:array, :map}]}} ]
   """
-  def parse_document(schema, doc), do: parse_document(schema, doc, nil)
+  def parse_document(schema, doc) when is_struct(schema) and is_map(doc) do
+    changeset = validate_document(schema, doc)
 
-  def parse_document(schema, doc, default_value) when is_struct(schema) and is_map(doc) do
-    do_parse_document(schema, doc, should_validate: false, default_value: default_value)
-  end
-
-  def parse_document(_schema, _map, _default_value), do: {:error, :empty_document}
-
-  @doc ~S"""
-  Parses map to defined schema
-
-  ## Examples
-
-      iex> BugsChannel.Utils.Ecto.parse_and_validate_document(%BugsChannel.Repo.Schemas.Service{}, %{id: "1", name: "bar", platform: "python", teams: [ %{  id: "1", name: "foo" } ], settings: %{ rate_limit: 1 }, auth_keys: [ %{ key: "key" } ] })
-      %BugsChannel.Repo.Schemas.Service{
-        auth_keys: [%BugsChannel.Repo.Schemas.ServiceAuthKey{key: "key", disabled: false, expired_at: nil}],
-        id: "1",
-        name: "bar",
-        platform: "python",
-        settings: %BugsChannel.Repo.Schemas.ServiceSettings{ rate_limit: 1 },
-        teams: [%BugsChannel.Repo.Schemas.Team{ id: "1", name: "foo"}]
-      }
-
-      iex> {:error, changeset} = BugsChannel.Utils.Ecto.parse_and_validate_document(%BugsChannel.Repo.Schemas.Service{}, nil)
-      iex> changeset.valid?
-      false
-
-      iex> {:error, changeset} = BugsChannel.Utils.Ecto.parse_and_validate_document(%BugsChannel.Repo.Schemas.Service{}, %{id: "1", platform: "foo", teams: "foo", settings: %{ rate_limit: 1 }, auth_keys: [ %{key: "key"} ] })
-      iex> {changeset.valid?, changeset.errors}
-      {false, [name: { "can't be blank", [validation: :required] }, teams: {"is invalid", [validation: :embed, type: {:array, :map}]}]}
-  """
-  def parse_and_validate_document(schema, nil) when is_struct(schema) do
-    do_parse_document(schema, %{}, should_validate: true, default_value: %{})
-  end
-
-  def parse_and_validate_document(schema, doc) when is_struct(schema) and is_map(doc) do
-    do_parse_document(schema, doc, should_validate: true, default_value: %{})
-  end
-
-  defp do_parse_document(schema, doc, opts)
-       when is_struct(schema) and is_map(doc) do
-    result = do_apply_changes(schema, doc, opts[:default_value])
-
-    if opts[:should_validate] && !result.valid? do
-      {:error, result}
+    if changeset.valid? do
+      do_parse_document(changeset)
     else
-      case Ecto.Changeset.apply_action(result, :update) do
-        {:ok, data} -> data
-        {:error, changeset} -> {:error, changeset}
-      end
+      {:error, changeset}
     end
   end
 
-  defp do_apply_changes(schema, doc, default_value) do
-    apply(schema.__struct__, :changeset, [schema, doc || default_value])
+  def parse_document(_schema, _map), do: {:error, :empty_document}
+
+  defp do_parse_document(%Ecto.Changeset{} = changeset) do
+    with {:ok, data} <- Ecto.Changeset.apply_action(changeset, :update) do
+      data
+    end
   end
 end

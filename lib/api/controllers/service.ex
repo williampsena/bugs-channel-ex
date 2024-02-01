@@ -4,6 +4,7 @@ defmodule BugsChannel.Api.Controllers.Service do
   """
 
   use BugsChannel.Api.Controllers.Controller
+  use BugsChannel.Api.Decorators.ParamsValidator
 
   alias BugsChannel.{Repo, Repo.Schemas, Repo.Parsers}
 
@@ -19,17 +20,10 @@ defmodule BugsChannel.Api.Controllers.Service do
     end
   end
 
+  @decorate validate_params(Parsers.Service)
   def create(%Plug.Conn{} = conn, params) do
-    case Parsers.Service.parse(params) do
-      {:error, changeset} ->
-        send_unprocessable_entity_resp(conn, render_ecto_error(changeset))
+    service = Parsers.Service.parse(params)
 
-      %Schemas.Service{} = service ->
-        do_create(conn, service)
-    end
-  end
-
-  defp do_create(%Plug.Conn{} = conn, %Schemas.Service{} = service) do
     with {:ok, _} <- Repo.Service.insert(service) do
       send_no_content(conn)
     end

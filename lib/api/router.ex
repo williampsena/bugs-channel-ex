@@ -4,6 +4,7 @@ defmodule BugsChannel.Api.Router do
   use BugsChannel.Api.RouterHandler
 
   alias BugsChannel.Api.Controllers
+  #alias BugsChannel.Repo.Parsers
 
   import BugsChannel.Utils.Config
   import BugsChannel.Plugs.Api
@@ -27,7 +28,10 @@ defmodule BugsChannel.Api.Router do
   if BugsChannel.mongo_as_target?() || test?() do
     get("/services", do: controller(conn, Controllers.Service, :index, conn.params))
     get("/services/:id", do: controller(conn, Controllers.Service, :show, %{"id" => id}))
-    post("/services", do: controller(conn, Controllers.Service, :create, conn.params))
+
+    post("/services",
+      do: controller(conn, Controllers.Service, :create, conn.params)
+    )
   end
 
   match(_, do: send_not_found_resp(conn))

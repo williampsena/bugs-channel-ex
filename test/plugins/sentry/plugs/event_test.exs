@@ -68,7 +68,7 @@ defmodule BugsChannel.Plugins.Sentry.Plugs.EventTest do
         |> put_params(event)
         |> SentryEventPlug.call([])
 
-      assert_conn(conn, 200, Jason.encode!(%{"event_id" => event_id}))
+      assert_conn(conn, 200, %{"event_id" => event_id})
     end
 
     test "when skip a event", %{event: event} do

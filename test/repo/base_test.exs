@@ -53,6 +53,14 @@ defmodule BugsChannel.Repo.BaseTest do
                },
                Repo.Base.get_by_id("services", service_id)
              )
+
+      assert match?(
+               %{
+                 "name" => "foo bar service",
+                 "platform" => "python"
+               },
+               Repo.Base.get_by_id("services", BSON.ObjectId.decode!(service_id))
+             )
     end
   end
 
@@ -104,6 +112,41 @@ defmodule BugsChannel.Repo.BaseTest do
       assert {:ok, inserted_service} = Repo.Base.insert("services", service)
       assert match?(%BugsChannel.Repo.Schemas.Service{}, inserted_service)
       refute is_nil(inserted_service.id)
+    end
+  end
+
+  describe "update/2" do
+    test "when a document is valid" do
+      service = build(:service)
+      assert {:ok, inserted_service} = Repo.Base.insert("services", service)
+
+      assert Repo.Base.update("services", inserted_service.id, %{"name" => "update from base"}) ==
+               :ok
+    end
+
+    test "when a document does not exists" do
+      assert Repo.Base.update("services", "38c865300000000000000000", %{
+               "name" => "update from base"
+             }) ==
+               {:error, :not_found_error, "The document could not be found."}
+    end
+
+    test "when there is no fields to update" do
+      assert Repo.Base.update("services", "38c865300000000000000000", %{}) ==
+               {:error, :validation_error, "There are no fields to be updated."}
+    end
+  end
+
+  describe "delete/2" do
+    test "when a document exists" do
+      service = build(:service)
+      assert {:ok, inserted_service} = Repo.Base.insert("services", service)
+      assert Repo.Base.delete("services", "#{inserted_service.id}") == :ok
+    end
+
+    test "when a document does not exists" do
+      assert Repo.Base.delete("services", "38c865300000000000000000") ==
+               {:error, :not_found_error, "The document could not be found."}
     end
   end
 end

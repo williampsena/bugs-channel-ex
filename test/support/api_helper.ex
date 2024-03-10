@@ -9,10 +9,10 @@ defmodule BugsChannel.Test.Support.ApiHelper do
     assert conn.state == :sent
     assert conn.status == status_code
 
-    if is_map(body) do
-      assert Jason.decode!(conn.resp_body) == body
-    else
-      assert conn.resp_body == body
+    cond do
+      is_map(body) -> assert Jason.decode!(conn.resp_body) == body
+      is_binary(body) -> assert conn.resp_body == body
+      true -> :ok
     end
   end
 

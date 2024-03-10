@@ -49,7 +49,7 @@ defmodule BugsChannel.Api.Controllers.ServiceTest do
       service_params = %{
         "name" => "foo bar service",
         "platform" => "python",
-        "teams" => [%{"id" => "1", "name" => "foo"}],
+        "teams" => ["1"],
         "settings" => %{"rate_limit" => 1},
         "auth_keys" => [%{"key" => "123"}]
       }
@@ -63,21 +63,24 @@ defmodule BugsChannel.Api.Controllers.ServiceTest do
         |> conn("/service", "")
         |> ServiceController.create(service_params)
 
-      assert_conn(conn, 204, "")
+      assert_conn(conn, 201, :skip)
+      assert match?(%{"id" => _service_id}, Jason.decode!(conn.resp_body))
     end
 
     test "with validation error", %{service_id: service_id} do
       params = %{"id" => service_id}
 
+      conn = conn(:post, "/service", "")
+
       conn =
-        :post
-        |> conn("/service", "")
+        conn
         |> ServiceController.create(params)
+        |> ErrorFallback.fallback(conn)
 
       assert_conn(
         conn,
         422,
-        Jason.encode!(%{"error" => ["name: can't be blank", "platform: can't be blank"]})
+        Jason.encode!(%{"error" => ["platform: can't be blank", "name: can't be blank"]})
       )
     end
 
@@ -90,6 +93,58 @@ defmodule BugsChannel.Api.Controllers.ServiceTest do
         conn =
           conn
           |> ServiceController.create(params)
+          |> ErrorFallback.fallback(conn)
+
+        assert_conn(conn, 500, %{"error" => error})
+      end
+    end
+  end
+
+  describe "PATCH /service" do
+    setup context do
+      service_params = %{
+        "id" => context.service_id,
+        "name" => "foo bar service #update"
+      }
+
+      [service_params: service_params]
+    end
+
+    test "with success", %{service_id: service_id, service_params: params} do
+      conn =
+        :patch
+        |> conn("/service", %{"id" => service_id})
+        |> ServiceController.update(params)
+
+      assert_conn(conn, 204, "")
+    end
+
+    test "with validation error", %{service_id: service_id} do
+      params = %{"id" => service_id, "foo" => "bar"}
+
+      conn = conn(:patch, "/service", %{"id" => service_id})
+
+      conn =
+        conn
+        |> ServiceController.update(params)
+        |> ErrorFallback.fallback(conn)
+
+      assert_conn(
+        conn,
+        422,
+        Jason.encode!(%{"error" => "There are no fields to be updated."})
+      )
+    end
+
+    test "with error", %{service_id: service_id, service_params: params} do
+      error = "invalid connection"
+
+      with_mock(Repo.Service, [:passthrough], update: fn _id, _service -> {:error, error} end) do
+        conn = conn(:patch, "/service", %{"id" => service_id})
+
+        conn =
+          conn
+          |> ServiceController.update(params)
           |> ErrorFallback.fallback(conn)
 
         assert_conn(conn, 500, %{"error" => error})

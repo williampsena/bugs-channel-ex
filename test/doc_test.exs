@@ -20,6 +20,7 @@ defmodule BugsChannel.DocTest do
   doctest BugsChannel.Repo.Base
   doctest BugsChannel.Repo.Parsers.Base
   doctest BugsChannel.Repo.Parsers.Service
+  doctest BugsChannel.Repo.Parsers.Team
   doctest BugsChannel.Repo.Parsers.Event
   doctest BugsChannel.Repo.Query.QueryCursor
   doctest BugsChannel.Repo.Query.PagedResults

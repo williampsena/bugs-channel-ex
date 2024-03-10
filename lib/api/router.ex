@@ -4,7 +4,7 @@ defmodule BugsChannel.Api.Router do
   use BugsChannel.Api.RouterHandler
 
   alias BugsChannel.Api.Controllers
-  #alias BugsChannel.Repo.Parsers
+  # alias BugsChannel.Repo.Parsers
 
   import BugsChannel.Utils.Config
   import BugsChannel.Plugs.Api
@@ -32,6 +32,8 @@ defmodule BugsChannel.Api.Router do
     post("/services",
       do: controller(conn, Controllers.Service, :create, conn.params)
     )
+
+    patch("/services/:id", do: controller(conn, Controllers.Service, :update, %{"id" => id}))
   end
 
   match(_, do: send_not_found_resp(conn))

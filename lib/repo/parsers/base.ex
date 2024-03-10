@@ -59,6 +59,8 @@ defmodule BugsChannel.Repo.Parsers.Base do
       end
 
       def parse_to_document(_, _), do: nil
+
+      defp invalid_schema_error, do: {:error, :invalid_schema}
     end
   end
 end

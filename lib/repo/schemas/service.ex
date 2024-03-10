@@ -36,7 +36,7 @@ defmodule BugsChannel.Repo.Schemas.Service do
     |> cast(params, ~w(id name platform)a)
     |> cast_embed(:settings)
     |> cast_embed(:auth_keys)
-    |> cast_embed(:teams, require: true)
+    |> cast_embed(:teams)
     |> validate_required(~w(name platform)a)
     |> validate_length(:name, min: 3)
   end

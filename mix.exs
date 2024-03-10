@@ -52,7 +52,7 @@ defmodule BugsChannel.MixProject do
       {:yaml_elixir, "~> 2.9"},
       {:ecto, "~> 3.10"},
       {:hammer, "~> 6.1"},
-      {:nebulex, "~> 2.5"},
+      {:nebulex, "~> 2.6"},
       {:shards, "~> 1.1"},
       {:decorator, "~> 1.4"},
       {:telemetry, "~> 1.0"},
@@ -60,6 +60,7 @@ defmodule BugsChannel.MixProject do
       {:mongodb_driver, "~> 1.2.0", optional: true},
       {:redix, "~> 1.1"},
       {:castore, ">= 0.0.0"},
+      {:goal, "~> 0.3"},
 
       # development deps
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false},

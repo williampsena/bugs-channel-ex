@@ -28,13 +28,14 @@ defmodule BugsChannel.Repo.Service do
     insert(@collection, service)
   end
 
+  def update(id, service) when is_map(service) do
+    update(@collection, id, service)
+  end
+
   def list(filters, query_cursor \\ nil) when is_map(filters) do
-    filters = Map.take(filters, @allowed_keys)
+    {results, query_cursor} = list(@collection, filters, @allowed_keys, query_cursor)
 
-    {query_cursor, query_opts} = build_query_options([], query_cursor)
-
-    @collection
-    |> find(filters, query_opts)
+    results
     |> parse_list(%RepoSchemas.Service{})
     |> with_paged_results(query_cursor)
   end

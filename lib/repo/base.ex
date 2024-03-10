@@ -13,7 +13,14 @@ defmodule BugsChannel.Repo.Base do
   Select one document in a collection by id.
   """
   def get_by_id(collection, id) do
-    find_one(collection, %{_id: BSON.ObjectId.decode!(id)})
+    find_one(collection, build_query_id(id))
+  end
+
+  defp build_query_id(id) do
+    object_id =
+      if is_binary(id), do: BSON.ObjectId.decode!(id), else: id
+
+    %{"_id" => object_id}
   end
 
   @doc """
@@ -43,6 +50,38 @@ defmodule BugsChannel.Repo.Base do
   end
 
   @doc """
+  Update fields from document in a collection.
+  """
+  def update(collection, id, map) do
+    map = Map.drop(map, ["id", :id])
+
+    if map == %{} do
+      {:error, :validation_error, "There are no fields to be updated."}
+    else
+      updates = %{"$set" => map}
+
+      with {:ok, %Mongo.UpdateResult{matched_count: matched_count}} <-
+             Mongo.update_one(:mongo, collection, build_query_id(id), updates) do
+        if matched_count == 0,
+          do: {:error, :not_found_error, "The document could not be found."},
+          else: :ok
+      end
+    end
+  end
+
+  @doc """
+  Delete document in a collection.
+  """
+  def delete(collection, id) do
+    with {:ok, %Mongo.DeleteResult{deleted_count: deleted_count}} <-
+           Mongo.delete_one(:mongo, collection, %{"_id" => BSON.ObjectId.decode!(id)}) do
+      if deleted_count == 0,
+        do: {:error, :not_found_error, "The document could not be found."},
+        else: :ok
+    end
+  end
+
+  @doc """
   Build mongo query options such as pagination parameters
   Build an query cursor schema
 
@@ -55,10 +94,9 @@ defmodule BugsChannel.Repo.Base do
       {%BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 25}, [skip: 0, limit: 25]}
 
   """
-  def build_query_options(opts, nil),
-    do: build_query_options(opts, @default_query_cursor)
+  def build_query_options(opts, query_cursor) do
+    query_cursor = query_cursor || @default_query_cursor
 
-  def build_query_options(opts, %QueryCursor{} = query_cursor) do
     {query_cursor,
      Keyword.merge(opts,
        skip: query_cursor.offset,
@@ -77,5 +115,28 @@ defmodule BugsChannel.Repo.Base do
   """
   def with_paged_results(results, %QueryCursor{} = query_cursor) when is_list(results) do
     PagedResults.build(results, query_cursor)
+  end
+
+  @doc """
+  List documents with filters and pagination
+
+  ## Examples
+
+      iex> BugsChannel.Repo.Base.list("teams", %{"name" => "foo"}, ~w(name), %BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 50})
+      {[], %BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 50}}
+
+      iex> BugsChannel.Repo.Base.list("teams", %{"name" => "foo"}, ~w(name), nil)
+      {[], %BugsChannel.Repo.Query.QueryCursor{page: 0, offset: 0, limit: 25}}
+
+  """
+  def list(collection, filters, allowed_keys, query_cursor)
+      when is_binary(collection) and is_map(filters) and is_list(allowed_keys) do
+    filters = Map.take(filters, allowed_keys)
+
+    {query_cursor, query_opts} = build_query_options([], query_cursor)
+
+    result = find(collection, filters, query_opts)
+
+    {result, query_cursor}
   end
 end

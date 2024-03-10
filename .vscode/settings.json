@@ -14,5 +14,8 @@
 
   // Misc
   "editor.wordBasedSuggestions": "off",
-  "editor.trimAutoWhitespace": false
+  "editor.trimAutoWhitespace": false,
+  "cSpell.words": [
+    "defparams"
+  ]
 }

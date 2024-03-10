@@ -4,7 +4,8 @@ defmodule BugsChannel.Api.Controllers.Service do
   """
 
   use BugsChannel.Api.Controllers.Controller
-  use BugsChannel.Api.Decorators.ParamsValidator
+
+  import BugsChannel.Api.Models.Service
 
   alias BugsChannel.{Repo, Repo.Schemas, Repo.Parsers}
 
@@ -20,11 +21,21 @@ defmodule BugsChannel.Api.Controllers.Service do
     end
   end
 
-  @decorate validate_params(Parsers.Service)
   def create(%Plug.Conn{} = conn, params) do
-    service = Parsers.Service.parse(params)
+    with {:ok, _} <- validate(:create, params),
+         do: do_create(conn, params)
+  end
 
-    with {:ok, _} <- Repo.Service.insert(service) do
+  defp do_create(conn, params) do
+    with %Schemas.Service{} = service <- Parsers.Service.parse(params),
+         {:ok, %{id: id}} <- Repo.Service.insert(service) do
+      send_json_resp(conn, %{"id" => id}, 201)
+    end
+  end
+
+  def update(%Plug.Conn{} = conn, %{"id" => id} = params) do
+    with {:ok, updated_params} <- validate(:update, Map.put(params, "id", id)),
+         :ok <- Repo.Service.update(id, updated_params) do
       send_no_content(conn)
     end
   end

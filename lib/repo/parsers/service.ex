@@ -77,12 +77,18 @@ defmodule BugsChannel.Repo.Parsers.Service do
   end
 
   defp parse_teams(doc) when is_list(doc) do
-    Enum.map(doc, fn team ->
-      %{
-        id: "#{team["id"]}",
-        name: team["name"]
-      }
-    end)
+    Enum.map(doc, &parse_team(&1))
+  end
+
+  defp parse_team(doc) when is_map(doc) do
+    %{
+      id: "#{doc["id"]}",
+      name: doc["name"]
+    }
+  end
+
+  defp parse_team(id) when is_binary(id) do
+    %{"id" => id, "name" => "TODO: get_name_from_cache"}
   end
 
   defp parse_auth_keys(doc) when is_list(doc) do

@@ -86,8 +86,22 @@ defmodule BugsChannel.Api.RouterTest do
       assert_conn(
         conn,
         422,
-        Jason.encode!(%{"error" => ["name: can't be blank", "platform: can\'t be blank"]})
+        Jason.encode!(%{
+          "error" => [
+            "platform: can\'t be blank",
+            "name: can't be blank"
+          ]
+        })
       )
+    end
+
+    test "returns PATCH /services/:id some response" do
+      conn =
+        :patch
+        |> conn("/services/38c865300000000000000000", %{"id" => "38c865300000000000000000"})
+        |> Router.call([])
+
+      assert_conn(conn, 422, %{"error" => "There are no fields to be updated."})
     end
   end
 end

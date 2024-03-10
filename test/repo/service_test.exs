@@ -105,6 +105,12 @@ defmodule BugsChannel.Repo.ServiceTest do
     end
   end
 
+  describe "update/1" do
+    test "when a service is valid", %{service_id: service_id} do
+      assert Repo.Service.update(service_id, %{"name" => "updated"}) == :ok
+    end
+  end
+
   describe "list/1" do
     test "when there is no service" do
       assert Repo.Service.list(%{"name" => "bug"}) == %BugsChannel.Repo.Query.PagedResults{
